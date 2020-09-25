@@ -138,11 +138,11 @@ Date
 %\begin{center}
 %	\layouttitle{Acknowledgements}
 %\end{center}
-\section*{Acknowledgments}
+%\section*{Acknowledgments}
 %\addcontentsline{toc}{section}{Acknowledgements}
 
 \myskip
-Some acknowledgments.
+%Some acknowledgments.
 
 \newpage
 
@@ -177,9 +177,9 @@ Orbital debris has quickly become one of the newest sources of pollution as a re
 
 \tableofcontents
 
-\listoftables
+%\listoftables
 
-\listoffigures
+%\listoffigures
 
 
 %==========================================================================
@@ -224,6 +224,22 @@ An outline of the roadmap for this paper is as follows: \newline
 A satellite is any artificial body placed in orbit around the earth or moon or another planet. The definition of the term is intentionally general and as such, can be used to reference space craft (SC), remnants of rockets (RB), and communication devices (SAT) in orbit.  A satellite breakup model is a mathematical model used to describe the outcome of a a satellite breakup due to an explosion or a collision (Liou, 2012) \cite{jer_chyi_liou_orbital_nodate}.  The outcome of any satellite breakup model should be a set of characteristics that should describe the size, area-to-mass (AM) ratio, and the ejection velocity of each fragment produced in the satellite breakup (Johnson and Krisko, 2001) \cite{johnson_nasas_2001}. The NASA Standard Satellite Breakup Model is an industry standard breakup model developed by NASA and is used by most major space agencies such as the European Space Agency (ESA) and the Japanese Aerospace Exploration Agency (JAXA). The implementation of it was provided by Johnson et. al in 2001 \cite{johnson_nasas_2001} but was later clarified by Kristo in 2011 \cite{krisko_proper_2011}. 
 
 The way that the model works is by using experimental observations performed both on Earth and in orbit to characterize the breakup using statistical distributions. The reason being is breakup events are stochastic, i.e are nondeterministic.  For example, explosions are stochastic, they do not occur the same way every time.  By using a statistical distribution and sampling from it we can more accurately represent the fragments that would be generated during a collision or explosion. For this paper, I will be focusing on how the collision fragments are generated, but it should be noted that the explosion case just involves slightly different parameters in many cases.
+
+\newpage
+\textbf{This is an example of a code block that was giving me trouble that I ended up deleting in the prior version, need to look into fixing it as it messes up the formatting of the document by going to the edge of the pdf}
+
+\begin{python}
+	def number_fragments(l_characteristic, m_target, m_projectile, v_impact, is_catastrophic, debris_type):
+	
+	# Defining reference Mass
+	m_ref = 0
+	if is_catastrophic: m_ref = m_target + m_projectile
+	else: m_ref = m_projectile * (v_impact)**2
+	return 6*(l_characteristic)**(-1.6)
+	
+\end{python}
+
+
 
 %==========================================================================
 
@@ -273,13 +289,13 @@ The way that the model works is by using experimental observations performed bot
 %==========================================================================
 % Appendices
 
-\appendix
+%\appendix
 
-\section{An appendix}
+%\section{An appendix}
 
 %==========================================================================
 
-\section{An other appendix}
+%\section{An other appendix}
 
 %==========================================================================
 %==========================================================================
