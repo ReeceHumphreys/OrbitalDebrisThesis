@@ -1,3 +1,5 @@
+.DS_Store
+bibliography.bib~
 honors_thesis_template.toc
 honors_thesis_template.pytxcode
 honors_thesis_template.synctex.gz
@@ -9,4 +11,3 @@ honors_thesis_template.lof
 honors_thesis_template.blg
 honors_thesis_template.bbl
 honors_thesis_template.aux
-bibliography.bib~
