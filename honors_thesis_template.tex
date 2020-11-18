@@ -5,6 +5,8 @@
 \usepackage{mathrsfs}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
+\usepackage{tcolorbox}
+\usepackage{caption}
 
 % Default fixed font does not support bold face
 \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
@@ -18,25 +20,76 @@
 
 \usepackage{listings}
 
+\tcbuselibrary{minted,breakable,xparse,skins}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\definecolor{bg}{gray}{1}
+\DeclareTCBListing{mintedbox}{O{}m!O{}}{%
+	breakable=true,
+	listing engine=minted,
+	listing only,
+	minted language=#2,
+	minted style=default,
+	minted options={%
+		linenos,
+		gobble=0,
+		breaklines=true,
+		breakafter=,,
+		fontsize=\small,
+		numbersep=8pt,
+		#1},
+	boxsep=0pt,
+	left skip=0pt,
+	right skip=0pt,
+	left=25pt,
+	right=0pt,
+	top=3pt,
+	bottom=3pt,
+	arc=5pt,
+	leftrule=0pt,
+	rightrule=0pt,
+	bottomrule=2pt,
+	toprule=2pt,
+	colback=bg,
+	colframe=gray!70,
+	enhanced,
+	overlay={%
+		\begin{tcbclipinterior}
+			\fill[gray!20!white] (frame.south west) rectangle ([xshift=20pt]frame.north west);
+	\end{tcbclipinterior}},
+	#3}
+
+\newtcblisting{tcbpythoncode}[1][python]{%
+	colback         = gray!5        ,
+	colframe        = gray!50!black ,
+	listing only                      ,
+	title           = #1              ,
+	halign title    = right           ,
+	fonttitle       = \bfseries       ,
+	listing engine  = minted          ,
+	minted language = python
+}
+
 % Python style for highlighting
 \newcommand\pythonstyle{\lstset{
-		language=Python,
-		basicstyle=\ttm,
+		language=Python.
+		basicstyle=\tt\footnotesize,
 		otherkeywords={self},             % Add keywords here
-		keywordstyle=\ttb\color{deepblue},
+		keywordstyle=\bf\color{deepblue},
 		emph={MyClass,__init__},          % Custom highlighting
-		emphstyle=\ttb\color{deepred},    % Custom highlighting style
+		emphstyle=\bf\color{deepred},    % Custom highlighting style
 		stringstyle=\color{deepgreen},
 		frame=tb,                         % Any extra options here
-		showstringspaces=false            % 
+		showstringspaces=false,            % 
+		breaklines=true
 }}
 
 
 % Python environment
-\lstnewenvironment{python}[1][]
+\lstnewenvironment{python, title}[1][]
 {
 	\pythonstyle
-	\lstset{#1}
+	\lstset{title}
+	\lstset{#1}	
 }
 {}
 
@@ -226,18 +279,122 @@ A satellite is any artificial body placed in orbit around the earth or moon or a
 The way that the model works is by using experimental observations performed both on Earth and in orbit to characterize the breakup using statistical distributions. The reason being is breakup events are stochastic, i.e are nondeterministic.  For example, explosions are stochastic, they do not occur the same way every time.  By using a statistical distribution and sampling from it we can more accurately represent the fragments that would be generated during a collision or explosion. For this paper, I will be focusing on how the collision fragments are generated, but it should be noted that the explosion case just involves slightly different parameters in many cases.
 
 \newpage
-\textbf{This is an example of a code block that was giving me trouble that I ended up deleting in the prior version, need to look into fixing it as it messes up the formatting of the document by going to the edge of the pdf}
 
-\begin{python}
-	def number_fragments(l_characteristic, m_target, m_projectile, v_impact, is_catastrophic, debris_type):
-	
-	# Defining reference Mass
-	m_ref = 0
-	if is_catastrophic: m_ref = m_target + m_projectile
-	else: m_ref = m_projectile * (v_impact)**2
-	return 6*(l_characteristic)**(-1.6)
-	
-\end{python}
+\subsection{Implementing the NASA Breakup Model}
+
+\subsubsection{ Characteristic Length and Number of fragments}
+
+In prior versions of the NASA breakup model, the mass of each piece of debris was used as the independent variable for the various distributions characterizing the collision or explosion (Krisko 2001). The model has since evolved to using the size or characteristic length, $L_c$, which is more directly correlated with experimental data for both on-orbit and terrestrial breakup events. The characteristic length makes the assumption that the debris particles are spherical in nature and have the density of aluminum for objects smaller than 1 cm with a diminishing density for larger debris. 
+
+Due to the stochastic nature of collisions and explosions, debris with the same characteristic length may not have the same characteristics (i.e mass, velocity , area). As such, these characteristics are based on distributions that are created using the characteristic length, but the actual value for each debris is randomly sampled from the distribution.
+
+To determine the characteristic lengths that will be used in the simulation, it is crucial to first recognize that collisions and explosions will produce different expressions. Explosions will produce larger debris fragments with smaller velocities while collisions tend to generate a large number of small fragments with high velocities (Barrows, 1996). 
+
+Utilizing the implementation described by Letizia for CiELO, To determine the characteristic length of each piece of debris, first 100 bins are created that are equally spaced on a logarithmic scale between 1mm and 10 cm. Then the number of debris that will be in each bin is computed utilizing the experimental observations of collisions and explosions. Finally to determine the characteristic length of each piece of debris, a randomly sampled value is drawn from the bin that the debris is contained in.
+ 
+\newpage
+
+ \begin{code}
+ 	\captionof{listing}{Characteristic Lenght Implementation}
+ 	\begin{tcbpythoncode}
+ 		def characteristic_lengths(m_target, m_projectile, v_impact, is_catastrophic, debris_type, explosion):
+ 		bins = np.geomspace(0.001, 0.1, 100)
+ 		N_fragments = [number_fragments(b, m_target, m_projectile, v_impact, is_catastrophic, debris_type, explosion) for b in bins ]
+ 		N_fragments = (np.array(N_fragments)).astype(int)
+ 		
+ 		L_c = np.concatenate([uniform(bins[i], bins[i+1], size=N_fragments[i]) for i in range(len(bins) - 1)])
+ 		
+ 		return L_c
+ 	\end{tcbpythoncode}
+ \end{code}
+ 
+ 
+ 
+As mentioned above, since collisions and explosions are fundamentally different, the function that generates the number of debris in a given bin must account for this difference. This is accomplished by specifying whether the given even is a collision or explosion first. In the case that the event is an explosion. The number of explosive fragments of size $L_c$ is governed by the following equation:
+$$N(L_c) =S * 6 * L_c^{-1.6}$$
+With S = 1, the relationship has been observed to be valid for rocket upper stages with masses in the range of 600-1000 kg (Johnson et al 2001). However, for explosions due to other malfunctions such as battery explosions, anti-satellite tests etc. S having a range between 0.1 to 1 was found to be a good approximate solution where the value of S depends on the explosive body type (Krisko 2001). 
+
+In the case of a collision, a distinction must be made, if the collision was catastrophic or non catastrophic. A collision is categorized as catastrophic if it causes the complete fragmentation of both the impactor and the target (Letizia). This occurs when the energy per target mass exceeds $40 J * g^{-1}$(Krisko 2007). The number of produced fragments for a collision is governed by the following :
+
+$$N(L_c [m]) = 0.1 * (M_e)^{0.75} * L_c^{-1.71}$$
+
+\noindent Where $M_e$ is defined as follows: \\
+\indent Catastrophic collision: $M_e[kg] = M_t [kg] + M_p[kg]$ \\
+\indent Non Catastrophic collision: $M_e[kg] = M_p[kg] **(v_c [km/s] / 1 [km/s])^2$
+
+\noindent $M_t$ is the target mass, $M_p$ is the projectile mass, $v_c$ is the relative impact velocity between the target and the projectile.
+
+
+ \begin{code}
+	\captionof{listing}{Characteristic Lenght Implementation} 
+	\begin{tcbpythoncode}
+		def number_fragments(l_characteristic, m_target, m_projectile, v_impact, is_catastrophic, debris_type, explosion):
+		if explosion == True: 
+		return 6*(l_characteristic)**(-1.6) # Can be multiplied by scaling factor S
+		else:
+		m_ref = 0 	# Defining reference Mass
+		if is_catastrophic: m_ref = m_target + m_projectile
+		else: m_ref = m_projectile * (v_impact)**2
+		return 0.1 * (m_ref)**0.75 * l_characteristic**-1.71
+	\end{tcbpythoncode}
+\end{code}
+
+\newpage
+\subsubsection{Distributions }
+
+The area-to-mass ratio, A/M, for fragments is a distribution that was based on analysis of thousands of fragmentation debris and provides us with a method to gain information that will be crucial when computing the perturbations on each fragment. The discrete distributions were found by using a $\chi^2$ fit to orbital decay characteristics for 1,780 upper stage explosion fragments, and similar data was developed for spacecraft fragments (Johnson et. al). There are three main producers of orbital debris, rocket bodies, R/B, spacecraft, S/C, and small satellites, soc. For simplicity only the soc distribution function is provided in this paper as the scenario that this paper aims to simulate is for a satellite explosion. However, the implementation for rocket bodies and spacecraft is included in the source code.
+
+For small objects, with $L_c < 8$cm, the A/M distribution is expressed as:  $$D_{A/M}(\lambda_c, \chi) = \mathcal{N}(\mu_{A/M}, \sigma_{A/M}(\lambda_c), \chi) $$
+
+\noindent $D_{A/M}$ is the distribution function of $\chi$ as a function of $\lambda_c$, where
+\begin{align*}
+	 \lambda_c &= \log_{10}(L_c),\\
+	 \chi &= \log_{10}(A/M),\\
+ \end{align*}
+
+\noindent $\mathcal{N}$ is the normal distribution function with mean $\mu_{A/M}$ and standard deviation $\sigma_{A/M}$, where
+
+\begin{align}
+	 \mu_{A/M} &= \begin{cases} 
+		-0.3, & \lambda_c\leq -1.75 \\
+		-0.3 - 1.4(\lambda_c + 1.75), & -1.75 < \lambda_c <-1.25 \\
+		-1.0, & \lambda_c \geq -1.25 
+	\end{cases}\\
+	\sigma_{A/M} &= \begin{cases} 
+		0.2, & \lambda_c \leq -3.5 \\
+		0.2 + 0.1333(\lambda_c + 3.5) & \lambda_c > -3.5 \\
+	\end{cases}
+\end{align}
+
+
+
+\begin{code}
+	\captionof{listing}{Characteristic Lenght Implementation} 
+	\begin{tcbpythoncode}
+		def distribution_AM(lambda_c, debris_type):
+		N = len(lambda_c)
+		lambda_c = np.array(lambda_c)
+		mean_factory = make_mean_AM(debris_type)
+		std_dev_factor = make_standard_dev_AM(debris_type)
+		mean_preSwitch = np.array(mean_factory(lambda_c))
+		std_dev_preSwitch = np.array(std_dev_factor(lambda_c))
+		alpha = np.array(alpha_AM(lambda_c, debris_category.rb)) # This takes a long time
+		switch = np.random.uniform(0,1, N)
+		if debris_type == debris_category.rb or debris_type == debris_category.sc:
+			means = np.empty(N)
+			I,J = switch<alpha, switch>=alpha
+			means[I] = mean_preSwitch[0, I]
+			means[J] = mean_preSwitch[1, J]
+			devs = np.empty(N)
+			devs[I] = std_dev_preSwitch[0, I]
+			devs[J] = std_dev_preSwitch[1, J]
+			return np.random.normal(means, devs, N)
+		else:
+			means = mean_preSwitch[0]
+			devs = std_dev_preSwitch[0]
+			return np.random.normal(means, devs, N)
+	\end{tcbpythoncode}
+\end{code}
 
 
 
