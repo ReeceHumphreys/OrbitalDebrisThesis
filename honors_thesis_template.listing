@@ -1,23 +1,17 @@
-def distribution_AM(lambda_c, debris_type):
-		N = len(lambda_c)
-		lambda_c = np.array(lambda_c)
-		mean_factory = make_mean_AM(debris_type)
-		std_dev_factor = make_standard_dev_AM(debris_type)
-		mean_preSwitch = np.array(mean_factory(lambda_c))
-		std_dev_preSwitch = np.array(std_dev_factor(lambda_c))
-		alpha = np.array(alpha_AM(lambda_c, debris_category.rb)) # This takes a long time
-		switch = np.random.uniform(0,1, N)
-		if debris_type == debris_category.rb or debris_type == debris_category.sc:
-			means = np.empty(N)
-			I,J = switch<alpha, switch>=alpha
-			means[I] = mean_preSwitch[0, I]
-			means[J] = mean_preSwitch[1, J]
-			devs = np.empty(N)
-			devs[I] = std_dev_preSwitch[0, I]
-			devs[J] = std_dev_preSwitch[1, J]
-			return np.random.normal(means, devs, N)
-		else:
-			means = mean_preSwitch[0]
-			devs = std_dev_preSwitch[0]
-			return np.random.normal(means, devs, N)
+def distribution_deltaV(kai, v_c, explosion=True):
+		N = len(kai)
+		mean = mean_deltaV(kai, explosion)
+		dev = std_dev_deltaV()
+		base = 10
+		centered = np.random.normal(0, dev, N)
+		I = np.nonzero(base**(mean+centered)>1.3*v_c)[0]
+		n = len(I)
+		while n != 0:
+			centered[I] = np.random.normal(0, dev, n)
+			#I = np.nonzero(base**(mean+centered)>1.3*v_c)[0]
+			J = np.nonzero(base**(mean[I] + centered[I]) >1.3*v_c)[0]
+			I = I[J]
+			n = len(I)
+		
+		return base**centered
 	

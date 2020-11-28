@@ -7,6 +7,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage{tcolorbox}
 \usepackage{caption}
+ \usepackage{multirow}
+ \usepackage{float}
+ \restylefloat{table}
+ \usepackage{imakeidx}
 
 % Default fixed font does not support bold face
 \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
@@ -19,6 +23,8 @@
 \definecolor{deepgreen}{rgb}{0,0.5,0}
 
 \usepackage{listings}
+
+\graphicspath{ {figures/} }
 
 \tcbuselibrary{minted,breakable,xparse,skins}
 \newenvironment{code}{\captionsetup{type=listing}}{}
@@ -115,6 +121,17 @@
 	{2.3ex \@plus.2ex}%
 	{\normalfont\Large\bfseries}}
 \makeatother
+
+
+% Index code
+\makeindex
+
+\newcommand{\boldindex}[1]{%
+	\textbf{#1}\index{#1}%
+}
+
+\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
+
 
 \begin{document}
 
@@ -231,8 +248,7 @@ Orbital debris has quickly become one of the newest sources of pollution as a re
 \tableofcontents
 
 %\listoftables
-
-%\listoffigures
+\listoffigures
 
 
 %==========================================================================
@@ -282,7 +298,7 @@ The way that the model works is by using experimental observations performed bot
 
 \subsection{Implementing the NASA Breakup Model}
 
-\subsubsection{ Characteristic Length and Number of fragments}
+\subsubsection{Characteristic Length and Number of fragments}
 
 In prior versions of the NASA breakup model, the mass of each piece of debris was used as the independent variable for the various distributions characterizing the collision or explosion (Krisko 2001). The model has since evolved to using the size or characteristic length, $L_c$, which is more directly correlated with experimental data for both on-orbit and terrestrial breakup events. The characteristic length makes the assumption that the debris particles are spherical in nature and have the density of aluminum for objects smaller than 1 cm with a diminishing density for larger debris. 
 
@@ -340,7 +356,7 @@ $$N(L_c [m]) = 0.1 * (M_e)^{0.75} * L_c^{-1.71}$$
 \end{code}
 
 \newpage
-\subsubsection{Distributions }
+\subsubsection{Area to Mass Distribution }
 
 The area-to-mass ratio, A/M, for fragments is a distribution that was based on analysis of thousands of fragmentation debris and provides us with a method to gain information that will be crucial when computing the perturbations on each fragment. The discrete distributions were found by using a $\chi^2$ fit to orbital decay characteristics for 1,780 upper stage explosion fragments, and similar data was developed for spacecraft fragments (Johnson et. al). There are three main producers of orbital debris, rocket bodies, R/B, spacecraft, S/C, and small satellites, soc. For simplicity only the soc distribution function is provided in this paper as the scenario that this paper aims to simulate is for a satellite explosion. However, the implementation for rocket bodies and spacecraft is included in the source code.
 
@@ -366,38 +382,161 @@ For small objects, with $L_c < 8$cm, the A/M distribution is expressed as:  $$D_
 	\end{cases}
 \end{align}
 
+Every fragment of debris has a corresponding A/M distribution since both $\mu_{A/M}$ and $\sigma_{A/M}$ are functions of $\lambda_c$. To determine the corresponding A/M ratio for each debris, a random value is drawn from the distribution. This accounts for explosions and collisions not producing the stochastic nature of fragmentation.
 
+Below, the implementation of the A/M distribution is provided in python for the SOC case. Note that the \mintinline{Python}{mean_factory}
+and the  \mintinline{Python}{std_dev_factory} function calls are to generate the mean and standard deviation for any debris type, not just SOC. However, the below implementation only demonstrates its application for SOC. The full implementation is included in the open source code base. 
 
+\newpage
+ 
 \begin{code}
-	\captionof{listing}{Characteristic Lenght Implementation} 
+	\captionof{listing}{Characteristic Length Implementation} 
 	\begin{tcbpythoncode}
 		def distribution_AM(lambda_c, debris_type):
 		N = len(lambda_c)
 		lambda_c = np.array(lambda_c)
+		# Generates mu_AM and sigma_AM depending on type of object (RB, SC, SOC)
 		mean_factory = make_mean_AM(debris_type)
-		std_dev_factor = make_standard_dev_AM(debris_type)
-		mean_preSwitch = np.array(mean_factory(lambda_c))
-		std_dev_preSwitch = np.array(std_dev_factor(lambda_c))
-		alpha = np.array(alpha_AM(lambda_c, debris_category.rb)) # This takes a long time
+		std_dev_factory = make_standard_dev_AM(debris_type)
+		mean_preSwitch = np.array(mean_factory(lambda_c)) 
+		std_dev_preSwitch = np.array(std_dev_factory(lambda_c))
 		switch = np.random.uniform(0,1, N)
-		if debris_type == debris_category.rb or debris_type == debris_category.sc:
-			means = np.empty(N)
-			I,J = switch<alpha, switch>=alpha
-			means[I] = mean_preSwitch[0, I]
-			means[J] = mean_preSwitch[1, J]
-			devs = np.empty(N)
-			devs[I] = std_dev_preSwitch[0, I]
-			devs[J] = std_dev_preSwitch[1, J]
-			return np.random.normal(means, devs, N)
-		else:
-			means = mean_preSwitch[0]
-			devs = std_dev_preSwitch[0]
-			return np.random.normal(means, devs, N)
+		# Pulling a random value from the distribution
+		means = mean_preSwitch[0]
+		devs = std_dev_preSwitch[0]
+		return np.random.normal(means, devs, N)
 	\end{tcbpythoncode}
 \end{code}
 
+The average cross-sectional area, A, also can be obtained through a one-to-one correspondence with $L_c$ using the following expression:
+\begin{align}
+	A_x = \begin{cases}
+		0.540424 * L_c^2 & \text{where } L_c < 0.00167 m \\
+		0.556945 * L_c^{2.0047077} & \text{where } L_c \geq 0.00167 m \\
+	\end{cases}
+\end{align}
 
+\begin{code}
+	\captionof{listing}{Characteristic Length Implementation} 
+	\begin{tcbpythoncode}
+		def avg_area(L_c):
+		if L_c < 0.00167: #(m)
+		return 0.540424 * L_c**2
+		else:
+		return 0.556945 * L_c**2.0047077
+	\end{tcbpythoncode}
+\end{code}
 
+Since the cross sectional area is known and the area to mass ratio is also known, we can now obtain the mass M simply by $$M = A_x / (A/M)$$
+
+\subsubsection{Change in Velocity Distribution }
+\noindent The change in velocity, $\Delta v$, distribution is also a function of the A/M ratio. More specifically it is a lognormal distribution modeled as $$D_{\Delta v}= \mathcal{N}(\mu_{v}(\chi), \sigma_{v}(\chi), \xi)$$
+
+\noindent Where, \begin{align}
+	\xi &= \log_{10}(\Delta v)\\
+	\chi &= \log_{10}(A/M)\\
+	\mu_{v}(\chi) &= 0.2\chi+1.85\\
+	 \sigma_{v}(\chi) &= 0.4
+\end{align}
+
+\begin{code}
+	\captionof{listing}{Characteristic Length Implementation} 
+	\begin{tcbpythoncode}
+		def distribution_deltaV(kai, v_c, explosion=True):
+		N = len(kai)
+		mean = mean_deltaV(kai, explosion)
+		dev = std_dev_deltaV()
+		base = 10
+		centered = np.random.normal(0, dev, N)
+		I = np.nonzero(base**(mean+centered)>1.3*v_c)[0]
+		n = len(I)
+		while n != 0:
+			centered[I] = np.random.normal(0, dev, n)
+			#I = np.nonzero(base**(mean+centered)>1.3*v_c)[0]
+			J = np.nonzero(base**(mean[I] + centered[I]) >1.3*v_c)[0]
+			I = I[J]
+			n = len(I)
+		
+		return base**centered
+	\end{tcbpythoncode}
+\end{code}
+
+\newpage
+\subsection{Validating the Implementation}
+Due to the niche nature of orbital debris analysis, it can generally be challenging to find any full implementation of the breakup model. Additionally, many of various space agencies around the world do not share the details of how they implemented the models. For this reason, the above implementations were largely modeled after the details given in the CiELO (Latizia) which mimicks the information provided in NASA literature.
+
+To validate that the python implementation was performed correctly, a comparison is made to existing data provided by various space agencies for a given scenario. This scenario is a  explosion event with a rocket body that weighs 1000kg and the data was provided by Rossi et. al. in "NASA Breakup Model Implementation Comparison of Results".
+
+As shown in the table below, the data from the various space agencies has some significant differences, especially for the characteristic length in the > 1mm range despite all implementing the same NASA breakup model. This is most likely a result of ambiguities in the original NASA breakup model specification literature as well as differences in how various programming languages perform random sampling. The goal of the python implementation is to be within the original deviations of the data. ... 
+
+\begin{table}[H]
+		\noindent\makebox[\textwidth]{
+				\begin{tabular}{|lccccccc|}
+				\hline
+				\multicolumn{1}{|c|}{\multirow{3}{*}{\textbf{Model}}} & \multicolumn{7}{c|}{Number of Fragments}                                                        \\ \cline{2-8} 
+				\multicolumn{1}{|c|}{}                                & \multicolumn{4}{c|}{Length}  & \multicolumn{1}{c|}{Mass} & \multicolumn{1}{c|}{Area} & Velocity \\
+				\multicolumn{1}{|c|}{} &
+				\textgreater 1mm &
+				\textgreater 1cm &
+				\textgreater 10cm &
+				\multicolumn{1}{c|}{\textgreater 1m} &
+				\multicolumn{1}{c|}{\textgreater 1g} &
+				\multicolumn{1}{c|}{\textgreater 1cm\textasciicircum{}2} &
+				\textgreater 100ms\textasciicircum{}-1 \\ \hline
+				ASI                                                   & 378,581   & 9,403  & 234 & 7 & 2,472                     & 5,878                     & 112,932  \\
+				CNSA                                                  & 37,865    & 960    & 32  & 9 & 254                       & -                         & 11,380   \\
+				DLR                                                   & 1,217,054 & 11,724 & 230 & 0 & 25,844                    & 31,124                    & 31,124   \\
+				ESA                                                   & 324,886   & 8,159  & 206 & 6 & 2,093                     & 5,024                     & 98,717   \\
+				NASA                                                  & 434,928   & 10,731 & 248 & 8 & 2,525                     & 6,416                     & 132,032  \\
+				\textit{Python Implementation}                        & -         & -      & -   & - & -                         & -                         & -        \\ \hline
+			\end{tabular}
+		}
+		\caption{(Data Source: NASA Breakup Model Implementation Comparison of results, A. Rossi, 24th IADC Meeting April 2006) }
+		\label{tab:debris-comparison}
+\end{table}
+
+... \textbf{will elaborate more in this section once the python implementation has been fixed and validated}
+
+\subsection{Application}
+
+... \textbf{will elaborate more in this section once the python implementation has been fixed and validated}
+
+\newpage
+\section{State Representation}
+
+Following the successful computation of the fragmentation event, we need to construct the representation of each fragment as a piece of orbital debris. There are two primary methods for representing the state of an orbital body.
+
+The first is using \boldindex{orbital state vectors} to represent the object. Orbital state vectors consist of the Cartesian vector's position, $\vec{r}$, and velocity $\vec{v}$ along with time, t. This representation is a natural result of Newton's laws of motion and the Universal Law of Gravitation.
+
+The second representation is as \boldindex{keplerian elements}, which are a result of Kepler's laws of planetary motion. These consist of the eccentricity, \emph{e}, Semimajor axis, \emph{a}, inclination, \emph{i}, longitude of the ascending node, $\Omega$, the argument of periapsis, $\omega$, and the true anomaly, $\nu$. Keplerian elements are a more abstract representation of the motion of an object, but provide significant benefits are explored in the subsequent subsections. 
+
+The combination of both of these state representations is used as they each pose benefits and drawbacks for conducting a simulation.
+
+\subsection{Orbital State vectors and their advantages}
+
+The Orbital State vectors utilize Newton's laws of motion and Newton's Universal Law of gravitation to describe the motion of an object in space. 
+Newton's Universal Law of Gravitation states that $$\vec{F_{grav}} = G\frac{ m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}$$ \noindent This is the dominant force that will be acting on an orbital object, neglecting drag. As such application of newtons second law yields
+\begin{align}
+	m_1 * \vec{a_1}  & = G\frac{m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}\\
+	\vec{a_i}  &= G \sum_{i \ne j}  m_j \frac{\vec{r_j} -\vec{r_i}}{\mid\vec{r_j - r_i}\mid^3} \indent\text{(More general)}
+\end{align}
+
+As such, the change in an object's velocity can be expressed as the sum of the contributions of gravitational attraction from all other surrounding bodies. Due to the gravitational force depending on mass, the gravitational attraction for a piece of debris to nearby debris is negligible compared to the gravitational attraction from a nearby planetary body. Thus, for computational efficiency, inter-particle interactions will be neglected.
+
+The benefits of using orbital state vectors are that they provide a natural intuition for how the motion of a piece of debris will change over time and they provide the necessary information for doing 3D visualization. However, a large drawback of using state vectors is that all six degrees of freedom, $ (x, y, z, v_x, v_y, v_z)$, will be changing during every timestep. As such when simulating a large number of fragments orbiting a body, the memory usage will grow quite large. Additionally, the periodic nature of orbits is not captured with this parameterization, meaning to know the state of a piece of debris in the far future will require propagating that debris from its initial conditions up to the desired time step. This again is an undesirable consequence and one of the primary motivations for using the Keplerian element parameterization.
+ 
+\newpage
+\subsection{Keplerian elements and their advantages}
+
+Viewed from an inertial plane, two orbiting bodies trace distinctive trajectories, where each has a focus at the common center of mass. When switching to a non-inertial frame centered on one of the bodies, only the trajectory of the opposite body is viewable. Keplerian elements are a parameterization that describes these non-inertial trajectories (Wikibook).
+
+The reference body is called the primary, and in our case will be the Earth, while the other body is the secondary. It should be noted that there is no preferred primary or secondary.
+
+\begin{figure}[h]
+	\centering
+	\caption{A figure}
+	\includegraphics[scale=0.35]{keplerian-elements}
+\end{figure}
 %==========================================================================
 
 %\section{Single Photon Down Conversion}
@@ -447,6 +586,8 @@ For small objects, with $L_c < 8$cm, the A/M distribution is expressed as:  $$D_
 % Appendices
 
 %\appendix
+
+\printindex
 
 %\section{An appendix}
 

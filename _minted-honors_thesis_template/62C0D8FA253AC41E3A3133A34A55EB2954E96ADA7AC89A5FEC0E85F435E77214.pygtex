@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{avg\PYGZus{}area}\PYG{p}{(}\PYG{n}{L\PYGZus{}c}\PYG{p}{):}
+		\PYG{k}{if} \PYG{n}{L\PYGZus{}c} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{0.00167}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{}(m)}
+		\PYG{k}{return} \PYG{l+m+mf}{0.540424} \PYG{o}{*} \PYG{n}{L\PYGZus{}c}\PYG{o}{**}\PYG{l+m+mi}{2}
+		\PYG{k}{else}\PYG{p}{:}
+		\PYG{k}{return} \PYG{l+m+mf}{0.556945} \PYG{o}{*} \PYG{n}{L\PYGZus{}c}\PYG{o}{**}\PYG{l+m+mf}{2.0047077}
+\end{Verbatim}
