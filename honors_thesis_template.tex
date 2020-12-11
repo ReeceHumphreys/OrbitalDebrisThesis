@@ -532,11 +532,122 @@ Viewed from an inertial plane, two orbiting bodies trace distinctive trajectorie
 
 The reference body is called the primary, and in our case will be the Earth, while the other body is the secondary. It should be noted that there is no preferred primary or secondary.
 
+To parameterize the motion of the orbital debris using Keplerian Elements the first step is use the position vector, $\vec{r}$, and velocity vector, $\vec{v}$, defined in the above subsection to define the \boldindex{specific angular momentum} vector as follows
+
+\begin{equation}
+\vec{h} = \vec{r} \times \vec{v}
+\end{equation}
+
+Using the Earths equator as the \boldindex{fundamental plane}, which is the plane that is used as a reference, we can begin constructing the parameters of the \boldindex{orbital plane}, which is the plane created by tracing out the $\vec{r}$ vector, which contains both the $\vec(r)$ vector and $\vec{v}$ vector. The intersection of the orbital plane with the fundamental plane is called the \boldindex{line of nodes}
+
+The \boldindex{ascending node} is the spot where the orbiting body crosses the plane of reference / equatorial plane in a northerly direction. Similarly, the \boldindex{descending node} is where it crosses the plane of reference in a southerly direction. $\vec{n}$ is a vector that points in the direction of the ascending node and is found by taking the cross product of the unit vector $\hat{k}$ with the angular momentum $\vec{h}$
+
+\begin{equation}
+\vec{n} = \hat{k} \times \vec{h}
+\end{equation}
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[scale=0.35]{keplerian-elements}
+	\caption{A figure}
+\end{figure}
+
+Using the parameters typically used for specifying an ellipse, we can also describe an orbit
+
+The \boldindex{Semi-Major Axis}, a,  is one half of the major axis. The major axis is a line that goes through both foci of the ellipse and the center, and ends at the widest point of the perimeter.
+
 \begin{figure}[h]
 	\centering
+	\includegraphics[scale=0.35]{semi-major_and_minor_axes}
 	\caption{A figure}
-	\includegraphics[scale=0.35]{keplerian-elements}
 \end{figure}
+
+Using the Vis-Viva equation, the semi-major axis, a, can be defined as:
+\begin{equation}
+a = \frac{1}{\frac{2}{\mid \vec{r} \mid} - \frac{\mid \vec{v} \mid^2 }{\mu}}
+\end{equation}
+\noindent where $\mu$ is the standard gravitational parameter of the primary body. For Earth the value of $\mu$ is $\mu = 3.986 *10^{14} \frac{m^3}{s^2}$.
+
+The \boldindex{orbital eccentricity} is a dimensionless parameter that indicates to what degree an orbit around another body deviates from a perfect circle. It has the value of 0 for a circular orbit, a value between 0 and 1 for elliptic orbits, 1 fir parabolic escape orbits, and greater than 1 for hyperbolic orbits. For the purpose of orbital debris in LEO, the eccentricities will be in the elliptic orbit range.
+
+The equation for eccentricity can be expressed from the the Orbital State vectors as follows:
+\begin{equation}
+\vec{e} = (\frac{\mid \vec{v} \mid^2}{\mu} - \frac{1}{\mid \vec{r} \mid})\vec{r} - \frac{(\vec{r} \cdot \vec{v})}{\mu}\vec{v}
+\end{equation}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.45]{eccentricity}
+	\caption{A figure}
+\end{figure}
+
+The \boldindex{inclination}, \textit{i}, is the angle formed between the unit vector pointing in the $\hat{K}$ direction and the angular momentum vector $\vec{h}$ and can be calculated using
+\begin{equation}
+\textit{i} =  \arccos \frac{K_z}{\mid \vec{h} \mid}
+\end{equation}
+
+The \boldindex{true anomaly}, $\nu$, is used to define the position of the body in its orbit, and is the angle between the direction of the periapsis and the current position of the body.
+\begin{equation}
+	\nu [rad] = \begin{cases}
+		\arccos \frac{\vec{e} \cdot \vec{r}}{\mid \vec{e} \mid \mid \vec{r} \mid} & \text{for } \vec{r} \cdot \vec{v} \geq 0 \\
+		2\pi - \arccos \frac{\vec{e} \cdot \vec{r}}{\mid \vec{e} \mid \mid \vec{r} \mid}& \text{otherwise}	
+	\end{cases}
+\end{equation}
+
+
+Another anomaly that is used to measure an objects position in an orbit is the \boldindex{Eccentric anomaly}, E, which is defined using the magnitude of the eccentricity vector, e,  and  the true anomaly as follows
+
+\begin{equation}
+	E = 2\arctan \frac{\tan \frac{\nu}{2}}{\sqrt{\frac{1 + e}{1-e}}}
+\end{equation}
+
+The \boldindex{longitude of the ascending node}, $\Omega$, is the angle between the ascending node and the unit vector $\hat{i}$
+\begin{equation}
+	\Omega [rad] = \begin{cases}
+		\arccos \frac{n_x}{\mid \vec{n} \mid} & \text{for } n_y \geq 0 \\
+		2\pi -	\arccos \frac{n_x}{\mid \vec{n} \mid} & \text{for } n_y < 0
+	\end{cases}
+\end{equation}
+
+The \boldindex{argument of periapsis}, $\omega$, is the angle in the orbital plane that is between the ascending node and the periapsis and is calculated using
+\begin{equation}
+	\omega [rad] = \begin{cases}
+		\arccos \frac{\vec{n} \cdot \vec{e}}{\mid \vec{n} \mid \mid \vec{e} \mid} & \text{for } e_z \geq 0 \\
+		2\pi -\arccos \frac{\vec{n} \cdot \vec{e}}{\mid \vec{n} \mid \mid \vec{e} \mid}& \text{for } e_z < 0	
+	\end{cases}
+\end{equation}
+
+Finally, using \boldindex{Keplers equation} we can define the \boldindex{mean anomaly} as
+\begin{equation}
+	M = E - e\sin E
+\end{equation}
+
+We can now parameterize each of the debris fragments using (e, a, \textit{i}, $\Omega$, $\omega$, M). The crucial reasoning for doing so is that in the absence of orbital perturbations only one of these parameters will change with respect to time, the mean anomaly. This will allow for more efficient computations in the band formation phase of the simulation. Moreover, the change in mean anomaly with respect to time is analytic and expressed as
+
+\begin{equation}
+\frac{dM}{dt} = \sqrt{\frac{\mu}{a^3}}
+\end{equation}
+
+As such, the position of a piece of debris in orbit can be found at any time in the future without having to numerically approximate its change in position over time. Due to the vast amount of debris generated, this will provide major benefits for the band formation phase of the orbital debris cloud.
+
+\newpage
+\section{Debris cloud evolution}
+
+\subsection{Initial states}
+
+\subsection{Ring formation}
+
+\subsection{Toroid}
+
+\subsection{Band}
+
+
+
+
+
+
+
+
 %==========================================================================
 
 %\section{Single Photon Down Conversion}
