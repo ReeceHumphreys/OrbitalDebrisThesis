@@ -1,0 +1,68 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{diffy\PYGZus{}q}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{t}\PYG{p}{,} \PYG{n}{state}\PYG{p}{):}
+
+		\PYG{n}{mu} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{cb}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}mu\PYGZsq{}}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{}[m\PYGZca{}3 • s\PYGZca{}\PYGZhy{}2]}
+
+		\PYG{n}{e}\PYG{p}{,} \PYG{n}{a}\PYG{p}{,} \PYG{n}{omega}\PYG{p}{,} \PYG{n}{Omega} \PYG{o}{=} \PYG{n}{state}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{A}\PYG{p}{))}
+
+		\PYG{n}{dedt} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros\PYGZus{}like}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)}
+		\PYG{n}{dadt} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros\PYGZus{}like}\PYG{p}{(}\PYG{n}{a}\PYG{p}{)}
+		\PYG{n}{domegadt} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros\PYGZus{}like}\PYG{p}{(}\PYG{n}{omega}\PYG{p}{)}
+		\PYG{n}{dOmegadt} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros\PYGZus{}like}\PYG{p}{(}\PYG{n}{Omega}\PYG{p}{)}
+
+		\PYG{n}{I\PYGZus{}doom} \PYG{o}{=} \PYG{n}{a}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZhy{}}\PYG{n}{e}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{cb}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}radius\PYGZsq{}}\PYG{p}{]} \PYG{o}{+} \PYG{l+m+mi}{50}\PYG{o}{*}\PYG{l+m+mf}{1e3} \PYG{c+c1}{\PYGZsh{} 50 km above earth sats are doomed}
+		\PYG{n}{a}\PYG{p}{[}\PYG{n}{I\PYGZus{}doom}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}
+		\PYG{n}{e}\PYG{p}{[}\PYG{n}{I\PYGZus{}doom}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+		\PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{perts}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}aero\PYGZsq{}}\PYG{p}{]:}
+		\PYG{n}{c\PYGZus{}d} \PYG{o}{=} \PYG{l+m+mf}{2.2} \PYG{c+c1}{\PYGZsh{} Drag coefficient}
+		\PYG{n}{drag\PYGZus{}coef} \PYG{o}{=} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{p}{(}\PYG{n}{c\PYGZus{}d} \PYG{o}{*} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{A}\PYG{p}{))} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{M}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{}[m\PYGZca{}2 • kg\PYGZca{}\PYGZhy{}1]}
+
+		\PYG{c+c1}{\PYGZsh{} Altitude}
+		\PYG{n}{z} \PYG{o}{=} \PYG{n}{a} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{cb}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}radius\PYGZsq{}}\PYG{p}{]}
+
+		\PYG{c+c1}{\PYGZsh{} Air density}
+		\PYG{n}{rho} \PYG{o}{=} \PYG{n}{aero}\PYG{o}{.}\PYG{n}{atmosphere\PYGZus{}density}\PYG{p}{(}\PYG{n}{z}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{}[kg • m\PYGZca{}\PYGZhy{}3]}
+		\PYG{c+c1}{\PYGZsh{}atm\PYGZus{}density[np.argwhere(np.isnan(atm\PYGZus{}density))] = 0 \PYGZsh{} Need to determine why some are NaN}
+
+		\PYG{c+c1}{\PYGZsh{} dedt}
+		\PYG{n}{I}       \PYG{o}{=} \PYG{p}{(}\PYG{n}{e}\PYG{o}{\PYGZgt{}=}\PYG{l+m+mf}{0.001}\PYG{p}{)}
+		\PYG{n}{dedt}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{drag\PYGZus{}coef}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]} \PYG{o}{*} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{mu} \PYG{o}{/} \PYG{n}{a}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])} \PYG{o}{*} \PYG{n}{rho}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])}
+		\PYG{n}{I}       \PYG{o}{=} \PYG{n}{I} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{n}{e}\PYG{o}{\PYGZlt{}}\PYG{l+m+mf}{0.01}\PYG{p}{)}
+		\PYG{n}{x}       \PYG{o}{=} \PYG{p}{(}\PYG{n}{a}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]} \PYG{o}{*} \PYG{n}{e}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])} \PYG{o}{/} \PYG{n}{aero}\PYG{o}{.}\PYG{n}{scale\PYGZus{}height}\PYG{p}{(}\PYG{n}{z}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])}
+		\PYG{n}{dedt}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]} \PYG{o}{*=} \PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)} \PYG{o}{+} \PYG{p}{(}\PYG{n}{e}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)} \PYG{o}{+} \PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))}
+
+		\PYG{c+c1}{\PYGZsh{} dadt}
+		\PYG{n}{dadt}    \PYG{o}{=} \PYG{n}{drag\PYGZus{}coef} \PYG{o}{*} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{mu} \PYG{o}{*} \PYG{n}{a}\PYG{p}{)} \PYG{o}{*} \PYG{n}{rho}
+		\PYG{n}{x}       \PYG{o}{=} \PYG{p}{(}\PYG{n}{a} \PYG{o}{*} \PYG{n}{e}\PYG{p}{)} \PYG{o}{/} \PYG{n}{aero}\PYG{o}{.}\PYG{n}{scale\PYGZus{}height}\PYG{p}{(}\PYG{n}{z}\PYG{p}{)}
+		\PYG{n}{I}       \PYG{o}{=} \PYG{p}{(}\PYG{n}{e}\PYG{o}{\PYGZgt{}=}\PYG{l+m+mf}{0.001}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{n}{e} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{0.01}\PYG{p}{)}
+		\PYG{n}{dadt}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]} \PYG{o}{*=} \PYG{p}{(}\PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{x}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{e}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]}\PYG{o}{*}\PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{x}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]))}
+		\PYG{n}{I}       \PYG{o}{=} \PYG{p}{(}\PYG{n}{e} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{0.01}\PYG{p}{)}
+		\PYG{n}{dadt}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]} \PYG{o}{*=} \PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{x}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{e}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]}\PYG{o}{*}\PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{x}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])} \PYG{o}{+} \PYG{p}{(}\PYG{l+m+mi}{3}\PYG{o}{/}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{o}{*}\PYG{n}{e}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{p}{(}\PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{x}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])} \PYG{o}{+} \PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{x}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]))} \PYG{o}{+} \PYG{p}{(}\PYG{n}{e}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]}\PYG{o}{**}\PYG{l+m+mi}{3}\PYG{o}{/}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{o}{*}\PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{x}\PYG{p}{[}\PYG{n}{I}\PYG{p}{])} \PYG{o}{+} \PYG{n}{iv}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{x}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]))}
+
+		\PYG{n}{dedt}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{argwhere}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{isnan}\PYG{p}{(}\PYG{n}{dedt}\PYG{p}{))]} \PYG{o}{=} \PYG{l+m+mi}{0}
+		\PYG{n}{dadt}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{argwhere}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{isnan}\PYG{p}{(}\PYG{n}{dadt}\PYG{p}{))]} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+		\PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{perts}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}J2\PYGZsq{}}\PYG{p}{]:}
+		\PYG{c+c1}{\PYGZsh{} Semi\PYGZhy{}latus rectum}
+		\PYG{n}{p} \PYG{o}{=} \PYG{n}{a} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{n}{e}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+		\PYG{c+c1}{\PYGZsh{} Mean motion}
+		\PYG{n}{n} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros\PYGZus{}like}\PYG{p}{(}\PYG{n}{a}\PYG{p}{)}
+		\PYG{n}{I} \PYG{o}{=} \PYG{n}{a} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}
+		\PYG{n}{n}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{cb}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}mu\PYGZsq{}}\PYG{p}{]} \PYG{o}{/} \PYG{n}{a}\PYG{p}{[}\PYG{n}{I}\PYG{p}{]}\PYG{o}{**}\PYG{l+m+mi}{3}\PYG{p}{)}
+
+		\PYG{c+c1}{\PYGZsh{} Inclination, assuming constant for now, maybe will change}
+		\PYG{n}{i} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{states}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{p}{:]}
+
+		\PYG{n}{base} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{3}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{cb}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}J2\PYGZsq{}}\PYG{p}{]} \PYG{o}{*} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{cb}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}radius\PYGZsq{}}\PYG{p}{]}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{o}{/}\PYG{n}{p}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{*} \PYG{n}{n}
+
+		\PYG{n}{domegadt} \PYG{o}{=} \PYG{n}{base} \PYG{o}{*} \PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{l+m+mi}{5}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{*}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{i}\PYG{p}{)}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+		\PYG{n}{dOmegadt} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{n}{base} \PYG{o}{*} \PYG{n}{cos}\PYG{p}{(}\PYG{n}{i}\PYG{p}{)}
+
+		\PYG{n}{domegadt}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{argwhere}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{isnan}\PYG{p}{(}\PYG{n}{domegadt}\PYG{p}{))]} \PYG{o}{=} \PYG{l+m+mi}{0}
+		\PYG{n}{dOmegadt}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{argwhere}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{isnan}\PYG{p}{(}\PYG{n}{dOmegadt}\PYG{p}{))]} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+		\PYG{n}{y0} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{dedt}\PYG{p}{,} \PYG{n}{dadt}\PYG{p}{,} \PYG{n}{domegadt}\PYG{p}{,} \PYG{n}{dOmegadt}\PYG{p}{))}
+		\PYG{k}{return} \PYG{n}{y0}
+\end{Verbatim}

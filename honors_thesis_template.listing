@@ -1,17 +1,5 @@
-def distribution_deltaV(kai, v_c, explosion=True):
-		N = len(kai)
-		mean = mean_deltaV(kai, explosion)
-		dev = std_dev_deltaV()
-		base = 10
-		centered = np.random.normal(0, dev, N)
-		I = np.nonzero(base**(mean+centered)>1.3*v_c)[0]
-		n = len(I)
-		while n != 0:
-			centered[I] = np.random.normal(0, dev, n)
-			#I = np.nonzero(base**(mean+centered)>1.3*v_c)[0]
-			J = np.nonzero(base**(mean[I] + centered[I]) >1.3*v_c)[0]
-			I = I[J]
-			n = len(I)
-		
-		return base**centered
+def fragmentation_flux(X):
+			return np.sum((X[:-1, :, 1] < 0) & (X[1:, :, 1] > 0), axis=1)
+		position = cartesian_states[:, 0, :, :]
+		flux = fragmentation_flux(position)
 	

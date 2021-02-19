@@ -11,6 +11,11 @@
  \usepackage{float}
  \restylefloat{table}
  \usepackage{imakeidx}
+\usepackage{subfigure}
+\usepackage{adjustbox}
+\usepackage{courier}
+\usepackage[toc,page]{appendix}
+
 
 % Default fixed font does not support bold face
 \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
@@ -22,7 +27,7 @@
 \definecolor{deepred}{rgb}{0.6,0,0}
 \definecolor{deepgreen}{rgb}{0,0.5,0}
 
-\usepackage{listings}
+\usepackage{listings, lstautogobble}
 
 \graphicspath{ {figures/} }
 
@@ -108,6 +113,147 @@
 \newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
 \graphicspath{{./figures/}}
 
+% NEWEST CODE FOFRMTATTING
+
+\lstloadlanguages{ % Check documentation for further languages ...
+	% [Visual]Basic,
+	% Pascal,
+	% C,
+	% C++,
+	% XML,
+	% HTML,
+	Python
+}
+\usepackage{xcolor}
+\definecolor{maroon}{cmyk}{0, 0.87, 0.68, 0.32}
+\definecolor{halfgray}{gray}{0.55}
+\definecolor{ipython_frame}{RGB}{207, 207, 207}
+\definecolor{ipython_bg}{RGB}{247, 247, 247}
+\definecolor{ipython_red}{RGB}{186, 33, 33}
+\definecolor{ipython_green}{RGB}{0, 128, 0}
+\definecolor{ipython_cyan}{RGB}{64, 128, 128}
+\definecolor{ipython_purple}{RGB}{170, 34, 255}
+\lstdefinelanguage{iPython}{
+	morekeywords={access,and,break,class,continue,def,del,elif,else,except,exec,finally,for,from,global,if,import,in,is,lambda,not,or,pass,print,raise,return,try,while},%
+	%
+	% Built-ins
+	morekeywords=[2]{abs,all,any,basestring,bin,bool,bytearray,callable,chr,classmethod,cmp,compile,complex,delattr,dict,dir,divmod,enumerate,eval,execfile,file,filter,float,format,frozenset,getattr,globals,hasattr,hash,help,hex,id,input,int,isinstance,issubclass,iter,len,list,locals,long,map,max,memoryview,min,next,object,oct,open,ord,pow,property,range,raw_input,reduce,reload,repr,reversed,round,set,setattr,slice,sorted,staticmethod,str,sum,super,tuple,type,unichr,unicode,vars,xrange,zip,apply,buffer,coerce,intern},%
+	%
+	sensitive=true,%
+	morecomment=[l]\#,%
+	morestring=[b]',%
+	morestring=[b]",%
+	%
+	morestring=[s]{'''}{'''},% used for documentation text (mulitiline strings)
+	morestring=[s]{"""}{"""},% added by Philipp Matthias Hahn
+	%
+	morestring=[s]{r'}{'},% `raw' strings
+	morestring=[s]{r"}{"},%
+	morestring=[s]{r'''}{'''},%
+	morestring=[s]{r"""}{"""},%
+	morestring=[s]{u'}{'},% unicode strings
+	morestring=[s]{u"}{"},%
+	morestring=[s]{u'''}{'''},%
+	morestring=[s]{u"""}{"""},%
+	%
+	% {replace}{replacement}{lenght of replace}
+	% *{-}{-}{1} will not replace in comments and so on
+	literate=
+	{á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+	{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+	{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+	{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+	{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+	{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+	{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+	{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+	{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+	{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+	{€}{{\EUR}}1 {£}{{\pounds}}1
+	%
+	{^}{{{\color{ipython_purple}\^{}}}}1
+	{=}{{{\color{ipython_purple}=}}}1
+	%
+	{+}{{{\color{ipython_purple}+}}}1
+	{*}{{{\color{ipython_purple}$^\ast$}}}1
+	{/}{{{\color{ipython_purple}/}}}1
+	%
+	{+=}{{{+=}}}1
+	{-=}{{{-=}}}1
+	{*=}{{{$^\ast$=}}}1
+	{/=}{{{/=}}}1,
+	literate=
+	*{-}{{{\color{ipython_purple}-}}}1
+	{?}{{{\color{ipython_purple}?}}}1,
+	%
+	identifierstyle=\color{black}\ttfamily,
+	commentstyle=\color{ipython_cyan}\ttfamily,
+	stringstyle=\color{ipython_red}\ttfamily,
+	keepspaces=true,
+	showspaces=false,
+	showstringspaces=false,
+	%
+	rulecolor=\color{ipython_frame},
+	frame=single,
+	frameround={t}{t}{t}{t},
+	framexleftmargin=6mm,
+	numbers=left,
+	numberstyle=\tiny\color{halfgray},
+	%
+	%
+	backgroundcolor=\color{ipython_bg},
+	%   extendedchars=true,
+	basicstyle=\scriptsize,
+	keywordstyle=\color{ipython_green}\ttfamily,
+}
+
+\lstset{
+	basicstyle=\ttm, % Default font
+	numbers=left,              % Location of line numbers
+	numberstyle=\tiny,          % Style of line numbers
+	stepnumber=1,              % Margin between line numbers
+	numbersep=5pt,              % Margin between line numbers and text
+	tabsize=2,                  % Size of tabs
+	extendedchars=true,
+	breaklines=true,            % Lines will be wrapped
+	keywordstyle=\color{red},
+	frame=b,
+	% keywordstyle=[1]\textbf,
+	% keywordstyle=[2]\textbf,
+	% keywordstyle=[3]\textbf,
+	% keywordstyle=[4]\textbf,   \sqrt{\sqrt{}}
+	stringstyle=\color{white}\ttfamily, % Color of strings
+	showspaces=false,
+	showtabs=false,
+	xleftmargin=17pt,
+	framexleftmargin=17pt,
+	framexrightmargin=5pt,
+	framexbottommargin=4pt,
+	% backgroundcolor=\color{lightgray},
+	showstringspaces=false,
+	autogobble=true,
+	morekeywords={self},
+	language=iPython,
+	literate=
+	{á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+	{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+	{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+	{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+	{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+	{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+	{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+	{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+	{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+	{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+	{€}{{\EUR}}1 {£}{{\pounds}}1
+}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+
+
+
 %\usepackage[letter,margin=1.5in]{geometry}
 %\addtolength{\rightmargin}{-0.5in}
 %\addtolength{\textwidth}{0.5in}
@@ -133,12 +279,18 @@
 \renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
 
 
+% Math eqn sizing
+\addtolength{\jot}{1em} % Spacing betwn align
+
+
+
 \begin{document}
 
 %==========================================================================
 %==========================================================================
 % Title pages.
 
+\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}}
 \newcommand{\mytitle}{[title]}
 \newcommand{\myauthor}{Reece Humphreys}
 \newcommand{\myadvisor}{Dr. Yaouen Fily}
@@ -633,11 +785,187 @@ As such, the position of a piece of debris in orbit can be found at any time in 
 \newpage
 \section{Debris cloud evolution}
 
-\subsection{Initial states}
+The evolution of the orbits and positions of fragments in time is what will be referred to as the debris cloud evolution. This evolution goes through a few distinctive phases, notably the ellipsoid,  ring formation,  toroid, and band formation. These different phases occur due to different orbital effects being more predominant than others. For example, the ellipsoid and ring formation is based on the variations in velocity that each fragment has due to the fragmentation event. Whereas the toroid and band formation steps are heavily influenced due to atmospheric drag, effects from the Earth's oblateness, and solar radiation. These different phases will be analyzed in-depth in the following subsections.
+\vspace{\baselineskip}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.45]{debrisphases}
+	\caption{A figure}
+\end{figure}
+
+
+\subsection{Initial states and Ellipsoid Formation}
+
+At the time of the fragmentation event, all debris fragments have the same position. This position is the location where the fragmentation event occurred. However, as seen in section 2, the velocities of each of the fragments are different and point in a random direction. This in turn leads to each fragment having a different amount of energy, and as such, a different orbit. 
+
+During this phase, the precise location of each fragment is needed. As such,  all of the Keplerian elements will need to be known for each fragment. Additionally, this phase occurs within the first few orbits of the fragments, thus perturbations have had negligible effects so far and thus do not need to be considered. 
+
+Due to neglecting inter-fragement gravitational interactions and perturbation the characteristics of motion throughout this phase are driven by two-body dynamics between an individual fragment and the Earth.
 
 \subsection{Ring formation}
 
+Following the Ellipsoid formation, the fragments will continue to spread out until they are approximately uniformly distributed in a ring shape. This is a natural consequence of the velocity distribution used to determine the change in velocity for each fragment.
+
+To determine once the ring formation has occurred, we must shift to a statistical view point.
+
+The first step is to determine how spread out the fragments are along their paths as initially, they will all be at the same location, spreading out as their locations are propagated forward in time.
+
+To measure their spread we will define a particle-based flux. This is accomplished by creating an xz plane in the equatorial coordinate system and detecting when particles have switched from one side of the plane to the other. Plotting the results will show peaks when the fragments pass through that will converge to some value as the fragments become uniformly spread out.
+
+\begin{code}
+	\captionof{listing}{Characteristic Length Implementation} 
+	\begin{tcbpythoncode}
+		def fragmentation_flux(X):
+			return np.sum((X[:-1, :, 1] < 0) & (X[1:, :, 1] > 0), axis=1)
+		position = cartesian_states[:, 0, :, :]
+		flux = fragmentation_flux(position)
+	\end{tcbpythoncode}
+\end{code}
+
+$X[:-1, :, 1] < 0$ is taking the y coordinates of all debris from the first time step to the second to last time step and checking if they are negative. It will assign a True to the negative ones and a False to the positive ones. Similarly, $X[1:, :, 1] > 0$ is doing the same thing but checking if the debris y coordinates are positive from the second time step to the last time step. By using a boolean and we now have an array that contains True when a fragment has switched from negative to positive between successive time steps and a false otherwise.
+
+By using np.sum on this boolean array, we assign a 1 to true and a 0 to false and as such can count all of the fragments in a given timestep that has switched from a negative y coordinate to a positive one. As such, we now have defined a flux for the fragments that gives information about how spread out the fragments are.
+
+\begin{figure}[t]
+	\begin{adjustbox}{max width=1.6\linewidth,center}
+		\centering     %%% not \center
+		\subfigure[]{\label{fig:a}\includegraphics[width=0.8\textwidth]{Flux_v_Time}}
+		\subfigure[]{\label{fig:b}\includegraphics[width=0.8\textwidth]{ConvergenceRatio_v_Time}}
+	\end{adjustbox}
+	\caption{The flux of the fragments as a function of time \textbf{(a)} and the convergence ratio of the flux as a function of time \textbf{(b)} }
+\end{figure}
+
+Plotting the flux over time shows these expected peaks and what seems to be it converging to some value. However, the data is quite noisy and we need a concrete method to determine once the fragments have uniformly distributed. As such, we need to develop a method to test for when the data has converged.
+
+ \subsubsection{Convergence}
+ 
+ Using methods from statistical mechanics, we can derive a method for determining when the flux of the fragments approximately converges to some steady value.
+ The first assumption that we will be making is that the motion an individual fragment is independent of the motion of all other fragments. This is a safe assumption to make as we are neglecting any inter gravitational forces between the fragments. (ANOTHER ASSUMPTION HERE)
+ 
+ Assuming that each fragment crossing the plane used for determining the flux is uniformally distributed in time. Pick the last N points that will pass in some time greater than 1 period. Call the total fragments crossing during that time M.
+ 
+ The probability a fragment crossing at time $t_i$ is $\frac{1}{N}$. Thus the probability of $m$ fragments crossing between time $t_i$ and $t_{i+1}$ is defined as follows
+ 
+ \begin{equation}
+ 	P = C^m_N * (\frac{1}{N})^m * (\frac{N - 1}{N})^{N-m}
+ \end{equation}
+
+\noindent Using this expression, we can define the probability of $n$ fragments crossing as:
+\begin{equation}
+	P_n = C^n_N * P^n * (1 - P)^N
+\end{equation}
+Notice that this is a \boldindex{Binomial distribution} which makes sense given the assumptions that were made about the distribution of the fragments.
+
+From this, we can compute the mean number of fragments crossing, $n$, as
+\begin{equation}
+	<n> = \sum_{n=0}^{N} n P_n = P * N = \frac{N}{M}
+\end{equation}
+Similarly, we can compute the variance as
+\begin{equation}
+	<(n-<n>)^2> = \sum_{n=0}^{N}(n - \frac{N}{m})^2 * P_n = P * N (1 - P)
+\end{equation}
+
+With $N, M$ being much larger than 1 we get the variation is approximately equal to the mean.
+
+We now have enough information to define a convergence ratio. If we divide the variation by the mean over a given interval, it will approximately equal to 1 if the number of fragments crossing during that interval is uniform.
+
+WRITE ABOUT PINCH POINT
+
 \subsection{Toroid}
+For the evolution of the cloud to continue, we now must consider orbital perturbations that will cause the orbits to change over time. If we continued to neglect perturbations the ring shape would be maintained.
+
+\subsubsection{Aerodynamic Drag}
+
+Another perturbation that causes significant changes in the fragments orbits is \boldindex{atmospheric drag}. This is a force that acts on a fragment as a result of molecules in the atmosphere colliding with it's surface and is a natural consequence of conservation of momentum. 
+
+\subsubsection{Atmospheric Models}
+
+To model the effects of drag, a suitable atmospheric model must be selected. An atmospheric model tells us information about the air pressure, air density, wind speeds, e.t.c. at varying locations in the atmosphere. However, it would be cumbersome and computationally inefficient to utilize a model that contains all of this information. As such, different models focus on various aspects of the atmosphere and no model is the universal 'best' model. (Vallado)
+
+Choosing a model that best fits a given use case comes down to the desired criterion for speed, accuracy, and applicability. For example the DAMAGE orbital debris model assumes a rotating, oblate atmosphere with density and density scale height values taken from the 1972 COSPAR International Reference Atmosphere (CIRA) (Hugh G. Lewis, 2012).  A detailed exploration of various atmospheric models is given by (Gaposchkin and Coster (1988), but for the purposes of this paper, we will be focusing on a model called the \boldindex{Exponential Atmospheric Model}. This is a  a static model that assumes a spherically symmetric distribution of particles, where the density decays exponentially with increasing altitude. (Vallado)
+
+In the Exponential Atmospheric Model the density $\rho$ varies according to
+\begin{equation}
+	\rho = \rho_0\:e^{-\frac{h_{ellp} - h_0}{H}}
+\end{equation}
+where $\rho_0$ is a reference density that is used with $h_0$,  a reference altitude,  $h_{ellp}$ the actual altitude above the ellipsoid, and $H$ which is a scale height.
+
+The reference density and reference altitude are tabulated values that come from sources such as the U.S. Standard Atmosphere and CIRA. The scale height is a value used to ensure continuity throughout $\rho$. The combination of the U.S. Standard Model and CIRA will yield moderately accurate results for general purposes and as such will utilized in for computing the force of drag. (Valado referencing Wertz 1978;820).
+
+\begin{figure}[H]
+	\centering     %%% not \center
+	\vspace*{-1.5in}
+	\includegraphics[width=0.7\textwidth]{Atmospheric_Density_v_Altitude}
+	\caption{The atmospheric density of Earth as a function of altitude according to the Exponential Atmospheric Model}
+\end{figure}
+
+The tabulated values that are used and the details of the implementation of this atmospheric model are included in the appendix of this paper. Additionally, the air density, $\rho$, as a function of altitude is shown above. Note that the y axis is given as a log scale. This is because the density of air at high altitudes is incredibly small and rapidly becomes larger the closer to Earth you get.
+
+\subsubsection{Effects of Drag on Orbital Elements}
+
+The aerodynamic drag on an object is typically expressed in the following form
+
+\begin{equation}
+	F_D = \frac{1}{2m} \rho v^2 \: C_D A
+\end{equation}
+where $\rho$ is the density of the fluid, $v$ is the speed of the object relative to the fluid, $C_D$ is an experimentally determined dimensionless number, $A$ is the cross sectional area, and $m$ is the mass of the satellite. $A$ the relevant cross section to take is based by how $C_D$ was measured. 
+
+Drag is a force that will cause an acceleration that opposes the direction of motion of an object. As such, drag produces a similar effect to a retrograde thrust which is the idea behind aerobraking, a useful orbital maneuver that can be performed around planetary bodies with an atmosphere. Similarly, for orbital debris drag is the predominant force behind changing the semi-major axis and eccentricity, gradually causing the debris to have a lower perigee. 
+
+As a result of the density increasing exponentially as altitude decreases, the effects of drag create a form of a feedback loop. A satellite experiences drag, which lowers its orbit, which in turn causes it to experience more drag. This will continue until a satellite is eventually orbited. 
+
+The expressions for the effects of drag on orbital elements are derived by King-Hele and cover three different ranges of eccentricities(King-Hele 1987).
+
+\begin{align}
+		\dfrac{da}{dt} = \begin{cases}
+			-\dfrac{C_D A}{M} \sqrt{\mathstrut\mu_E a \rho} \exp(-\dfrac{a - R_h}{H})[I_0 
+			+ 2eI_1 + \\ \dfrac{3}{4}e^2(I_0 + I_2) + \dfrac{e^3}{4}(3I_1 +I_3)] & \text{for } 0.01 \leq e \leq 0.2 \\
+			-\dfrac{C_D A}{M} \sqrt{\mathstrut\mu_E a \rho}\exp(-\dfrac{a - R_h}{H})[I_0 + 2eI_1 ] & \text{for } \text{for } 0.001 \leq e < 0.01\\
+			-\dfrac{C_D A}{M} \sqrt{\mathstrut\mu_E a \rho}\exp(-\dfrac{a - R_h}{H}) & \text{for } e < 0.001
+		\end{cases}\\
+		\newline
+		\dfrac{de}{dt} = \begin{cases}
+			-\dfrac{C_D A}{M} \sqrt{\mathstrut\dfrac{\mu_E}{a} \rho}\exp(-\dfrac{a - R_h}{H}) & \text{for } 0.01 \leq e \leq 0.2  \\
+			-\dfrac{C_D A}{M} \sqrt{\mathstrut\dfrac{\mu_E}{a} \rho}\exp(-\dfrac{a - R_h}{H})[I_1 + \dfrac{e}{2}(I_0 + I_2)] & \text{for } 0.001 \leq e < 0.01\\
+			0 & \text{for } e < 0.001
+		\end{cases}
+	\end{align}
+
+$I_n(z)$ represents the modified Bessel function with order $n$, where $z = \frac{ae}{H}$ and is given by
+$$
+I_k(z) = \dfrac{1}{\pi} \int_{0}^{\pi} e^{z\cos(\theta)}\cos(k\theta)d\theta \:\:\:\:\:\: k \in Z.
+$$
+Following the precedents of many other texts, we will be assuming that the fragments are spherical in nature and have a drag coefficient of approximately 2.2.
+
+The implementation of drag, and other perturbations is contained in the \hyperref[subsec:perts]{appendix}
+
+\subsubsection{Nodal Precession}
+
+\boldindex{Nodal precession} is the precession of the orbital plane of a satellite around the rotational axis of the central body. This is caused due to the non-spherical nature of the rotating central body. The non-spherical nature is a result of the centrifugal force produced by the rotation which  deforms the body, causing an equatorial bulge
+
+As a result, the planetary body creates a non-uniform gravitational field that induces a torque on satellites. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{Nodal_precession}
+	\caption{From Wikipedia Nodal Precession}
+\end{figure}
+
+Intuitively, it would appear that the torque would reduce the inclination of the orbit. However, due to the bulge, the gravitational force is not directed towards the center of the body but rather is offset toward the equatorial plane. As such, it causes torque-induced gyroscopic precession which causes the ascending and descending nodes to drift with time. This phenomenon is called \boldindex{Nodal Precession}.
+
+The effects of nodal precession on the ascending and descending nodes is expressed by
+\begin{align*}
+	\dfrac{d\omega}{dt} &= \dfrac{3}{2}\:J_2\dfrac{R_E^2}{p^2}\bar{n}(2 - \dfrac{5}{2}\sin^2(i))\\
+	\dfrac{d\Omega}{dt} &= -\dfrac{3}{2}\:J_2\dfrac{R_E^2}{p^2}\bar{n}\cos(i)
+\end{align*}
+where $p = a(1 - e^2)$ is the semi-latus rectum of the orbit, $\bar{n}=\sqrt{\mathstrut\dfrac{\mu_E}{a^3}}$ is the mean motion, $R_E$ is the radius of the Earth, and $J_2$ is the Earths second dynamic form factor.
+
+The J2 term is a result of an infinite series equation that describes the perturbation effects of a rotating planetary body on the gravity of a planet. Each term of the series is denoted as $J_n$, however the $J_2$ term is more than 1000 times larger than the other terms (Ai soln. j2 perturbation). This is why the J2 effect is considered a relevant orbital perturbation for the evolution of an orbital debris cloud. For context, Earth's  $J_2$ term has a value of $0.108 \times 10^{-2}$ whereas its $J_3$ term has a value of $0.253 \times 10^{-5}$.
+
+
+
+
 
 \subsection{Band}
 
@@ -713,6 +1041,31 @@ As such, the position of a piece of debris in orbit can be found at any time in 
 % Some other possible styles: abbrv, acm, alpha, apalike, ieeetr, plain, siam, unsrt
 \bibliographystyle{plain}
 \bibliography{honors_thesis_bibliography} % Use the name of you bibliography file. Omit the ".bib" extension.
+
+\begin{appendices}
+	\section{Code}
+	
+	\subsection{Test}
+	
+	\subsection{Perturbations}
+	\label{subsec:perts}
+	\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 61, lastline = 126]
+	{code/OrbitalDebris/Perturbations.py}
+
+	
+	\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]
+	{code/OrbitalDebris/Perturbations.py}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+\end{appendices}
 
 \end{document}
 
