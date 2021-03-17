@@ -14,8 +14,11 @@
 \usepackage{subfigure}
 \usepackage{adjustbox}
 \usepackage{courier}
+\usepackage{mathtools}
 \usepackage[toc,page]{appendix}
 
+% Matrix stretching
+\renewcommand{\arraystretch}{0.5} % because \baselinestretch is 1.6667
 
 % Default fixed font does not support bold face
 \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
@@ -298,7 +301,8 @@
 \newcommand{\myskip}{\vspace{0.5in}}
 \newcommand{\layouttitle}[1]{{\bf\large\MakeUppercase{#1}}}
 \setlength{\parindent}{0em}
-\doublespace
+\doublespacing
+\renewcommand{\arraystretch}{0.6} % because \baselinestretch is 1.6667
 \pagenumbering{roman}
 \thispagestyle{empty}
 
@@ -458,7 +462,7 @@ Due to the stochastic nature of collisions and explosions, debris with the same 
 
 To determine the characteristic lengths that will be used in the simulation, it is crucial to first recognize that collisions and explosions will produce different expressions. Explosions will produce larger debris fragments with smaller velocities while collisions tend to generate a large number of small fragments with high velocities (Barrows, 1996). 
 
-Utilizing the implementation described by Letizia for CiELO, To determine the characteristic length of each piece of debris, first 100 bins are created that are equally spaced on a logarithmic scale between 1mm and 10 cm. Then the number of debris that will be in each bin is computed utilizing the experimental observations of collisions and explosions. Finally to determine the characteristic length of each piece of debris, a randomly sampled value is drawn from the bin that the debris is contained in.
+Utilizing the implementation described by Letizia for CiELO, To determine the characteristic length of each piece of debris, first 100 bins are created that are equally spaced on a logarithmic scale between 1mm and 10 cm. Then the number of debris that will be in each bin is computed utilizing the experimental observations of collisions and explosions. Finally to determine the characteristic length of each piece of debris, a randomly sampled value is drawn from the bin that the debris is contained in. \cite{letizia_space_2016}
  
 \newpage
 
@@ -482,7 +486,7 @@ As mentioned above, since collisions and explosions are fundamentally different,
 $$N(L_c) =S * 6 * L_c^{-1.6}$$
 With S = 1, the relationship has been observed to be valid for rocket upper stages with masses in the range of 600-1000 kg (Johnson et al 2001). However, for explosions due to other malfunctions such as battery explosions, anti-satellite tests etc. S having a range between 0.1 to 1 was found to be a good approximate solution where the value of S depends on the explosive body type (Krisko 2001). 
 
-In the case of a collision, a distinction must be made, if the collision was catastrophic or non catastrophic. A collision is categorized as catastrophic if it causes the complete fragmentation of both the impactor and the target (Letizia). This occurs when the energy per target mass exceeds $40 J * g^{-1}$(Krisko 2007). The number of produced fragments for a collision is governed by the following :
+In the case of a collision, a distinction must be made, if the collision was catastrophic or non catastrophic. A collision is categorized as catastrophic if it causes the complete fragmentation of both the impactor and the target (Letizia) \cite{letizia_space_2016}. This occurs when the energy per target mass exceeds $40 J * g^{-1}$(Krisko 2007). The number of produced fragments for a collision is governed by the following :
 
 $$N(L_c [m]) = 0.1 * (M_e)^{0.75} * L_c^{-1.71}$$
 
@@ -666,16 +670,16 @@ The combination of both of these state representations is used as they each pose
 
 \subsection{Orbital State vectors and their advantages}
 
-The Orbital State vectors utilize Newton's laws of motion and Newton's Universal Law of gravitation to describe the motion of an object in space. 
-Newton's Universal Law of Gravitation states that $$\vec{F_{grav}} = G\frac{ m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}$$ \noindent This is the dominant force that will be acting on an orbital object, neglecting drag. As such application of newtons second law yields
+The Orbital State vectors utilize Newton's laws of motion and Newton's Universal Law of Gravitation to describe the motion of an object in space. 
+Newton's Universal Law of Gravitation states that $$\vec{F_{grav}} = G\frac{ m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}$$ \noindent This is the dominant force that acts on orbital objects, neglecting drag. As such application of newtons second law yields
 \begin{align}
 	m_1 * \vec{a_1}  & = G\frac{m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}\\
 	\vec{a_i}  &= G \sum_{i \ne j}  m_j \frac{\vec{r_j} -\vec{r_i}}{\mid\vec{r_j - r_i}\mid^3} \indent\text{(More general)}
 \end{align}
 
-As such, the change in an object's velocity can be expressed as the sum of the contributions of gravitational attraction from all other surrounding bodies. Due to the gravitational force depending on mass, the gravitational attraction for a piece of debris to nearby debris is negligible compared to the gravitational attraction from a nearby planetary body. Thus, for computational efficiency, inter-particle interactions will be neglected.
+Therefore, the change in an object's velocity can be expressed as the sum of the contributions of gravitational attraction from all other surrounding bodies. Gravitational force depends on mass, meaning the gravitational attraction for a piece of debris to nearby debris is negligible compared to the gravitational attraction from a nearby planetary body. Thus, for computational efficiency, inter-particle interactions will be neglected.
 
-The benefits of using orbital state vectors are that they provide a natural intuition for how the motion of a piece of debris will change over time and they provide the necessary information for doing 3D visualization. However, a large drawback of using state vectors is that all six degrees of freedom, $ (x, y, z, v_x, v_y, v_z)$, will be changing during every timestep. As such when simulating a large number of fragments orbiting a body, the memory usage will grow quite large. Additionally, the periodic nature of orbits is not captured with this parameterization, meaning to know the state of a piece of debris in the far future will require propagating that debris from its initial conditions up to the desired time step. This again is an undesirable consequence and one of the primary motivations for using the Keplerian element parameterization.
+The benefits of using orbital state vectors are that they provide a natural intuition for how the motion of a piece of debris will change over time and they provide the necessary information for doing 3D visualization. However, a large drawback of using state vectors is that all six degrees of freedom, $ (x, y, z, v_x, v_y, v_z)$, will be changing during every timestep. As such when simulating a large number of fragments orbiting a body, the memory usage will grow quite large. Additionally, the periodic nature of orbits is not captured with this parameterization, meaning to know the state of a piece of debris in the far future will require propagating that debris from its initial conditions up to the desired time step. This again is an undesirable consequence and one of the primary motivations for preferring the Keplerian element parameterization.
  
 \newpage
 \subsection{Keplerian elements and their advantages}
@@ -684,7 +688,7 @@ Viewed from an inertial plane, two orbiting bodies trace distinctive trajectorie
 
 The reference body is called the primary, and in our case will be the Earth, while the other body is the secondary. It should be noted that there is no preferred primary or secondary.
 
-To parameterize the motion of the orbital debris using Keplerian Elements the first step is use the position vector, $\vec{r}$, and velocity vector, $\vec{v}$, defined in the above subsection to define the \boldindex{specific angular momentum} vector as follows
+The first step to reparameterize the motion of the orbital debris is to use the position vector, $\vec{r}$, and velocity vector, $\vec{v}$, defined in the above subsection to define the \boldindex{specific angular momentum} vector as follows
 
 \begin{equation}
 \vec{h} = \vec{r} \times \vec{v}
@@ -720,7 +724,7 @@ a = \frac{1}{\frac{2}{\mid \vec{r} \mid} - \frac{\mid \vec{v} \mid^2 }{\mu}}
 \end{equation}
 \noindent where $\mu$ is the standard gravitational parameter of the primary body. For Earth the value of $\mu$ is $\mu = 3.986 *10^{14} \frac{m^3}{s^2}$.
 
-The \boldindex{orbital eccentricity} is a dimensionless parameter that indicates to what degree an orbit around another body deviates from a perfect circle. It has the value of 0 for a circular orbit, a value between 0 and 1 for elliptic orbits, 1 fir parabolic escape orbits, and greater than 1 for hyperbolic orbits. For the purpose of orbital debris in LEO, the eccentricities will be in the elliptic orbit range.
+The \boldindex{orbital eccentricity} is a dimensionless parameter that indicates to what degree an orbit around another body deviates from a perfect circle. It has the value of 0 for a circular orbit, a value between 0 and 1 for elliptic orbits, 1 for parabolic escape orbits, and greater than 1 for hyperbolic orbits. For the purpose of orbital debris in LEO, the eccentricities will be in the elliptic orbit range.
 
 The equation for eccentricity can be expressed from the the Orbital State vectors as follows:
 \begin{equation}
@@ -747,7 +751,7 @@ The \boldindex{true anomaly}, $\nu$, is used to define the position of the body 
 \end{equation}
 
 
-Another anomaly that is used to measure an objects position in an orbit is the \boldindex{Eccentric anomaly}, E, which is defined using the magnitude of the eccentricity vector, e,  and  the true anomaly as follows
+ The \boldindex{Eccentric anomaly}, E, is also used to measure an objects in an orbit. The Eccentric Anomaly is defined using the magnitude of the eccentricity vector, e,  and  the true anomaly as follows
 
 \begin{equation}
 	E = 2\arctan \frac{\tan \frac{\nu}{2}}{\sqrt{\frac{1 + e}{1-e}}}
@@ -774,7 +778,7 @@ Finally, using \boldindex{Keplers equation} we can define the \boldindex{mean an
 	M = E - e\sin E
 \end{equation}
 
-We can now parameterize each of the debris fragments using (e, a, \textit{i}, $\Omega$, $\omega$, M). The crucial reasoning for doing so is that in the absence of orbital perturbations only one of these parameters will change with respect to time, the mean anomaly. This will allow for more efficient computations in the band formation phase of the simulation. Moreover, the change in mean anomaly with respect to time is analytic and expressed as
+We can now parameterize each of the debris fragments using (e, a, \textit{i}, $\Omega$, $\omega$, M). This step is crucial to ensure that in the absence of orbital perturbations only one of these parameters, the mean anomaly, will change with respect to time, t This will allow for more efficient computations in the band formation phase of the simulation. Moreover, the change in mean anomaly with respect to time is analytic and expressed as
 
 \begin{equation}
 \frac{dM}{dt} = \sqrt{\frac{\mu}{a^3}}
@@ -785,7 +789,7 @@ As such, the position of a piece of debris in orbit can be found at any time in 
 \newpage
 \section{Debris cloud evolution}
 
-The evolution of the orbits and positions of fragments in time is what will be referred to as the debris cloud evolution. This evolution goes through a few distinctive phases, notably the ellipsoid,  ring formation,  toroid, and band formation. These different phases occur due to different orbital effects being more predominant than others. For example, the ellipsoid and ring formation is based on the variations in velocity that each fragment has due to the fragmentation event. Whereas the toroid and band formation steps are heavily influenced due to atmospheric drag, effects from the Earth's oblateness, and solar radiation. These different phases will be analyzed in-depth in the following subsections.
+The evolution of the orbits and positions of fragments with respect to time is what will be referred to as the debris cloud evolution. This evolution goes through a few distinctive phases, notably the ellipsoid,  ring formation,  toroid, and band formation. These different phases occur due to certain orbital effects being more predominant than others. For example, the ellipsoid and ring formation occurs due to the variations in velocity that each fragment has as a result of the fragmentation event. Whereas the toroid and band formation steps are heavily influenced by atmospheric drag, effects from the Earth's oblateness, and solar radiation. These different phases will be analyzed in-depth in the following subsections.
 \vspace{\baselineskip}
 
 \begin{figure}[h]
@@ -797,21 +801,21 @@ The evolution of the orbits and positions of fragments in time is what will be r
 
 \subsection{Initial states and Ellipsoid Formation}
 
-At the time of the fragmentation event, all debris fragments have the same position. This position is the location where the fragmentation event occurred. However, as seen in section 2, the velocities of each of the fragments are different and point in a random direction. This in turn leads to each fragment having a different amount of energy, and as such, a different orbit. 
+At the time of the fragmentation event, all debris fragments have the same position. However, as seen in section 2, the velocities of each of the fragments are different and point in a random direction. This in turn leads to each fragment having a different amount of energy, and as such, a different orbit. 
 
-During this phase, the precise location of each fragment is needed. As such,  all of the Keplerian elements will need to be known for each fragment. Additionally, this phase occurs within the first few orbits of the fragments, thus perturbations have had negligible effects so far and thus do not need to be considered. 
+During this phase, the precise location of each fragment is needed. As such,  all of the Keplerian elements will need to be known for each fragment. Additionally, this phase occurs within the first few orbits of the fragments, when perturbations have negligible effects. Therefore such factors do not need to be considered.
 
-Due to neglecting inter-fragement gravitational interactions and perturbation the characteristics of motion throughout this phase are driven by two-body dynamics between an individual fragment and the Earth.
+Due to neglecting inter-fragment gravitational interactions and perturbation the characteristics of motion throughout this phase are driven by two-body dynamics between an individual fragment and the Earth.
 
 \subsection{Ring formation}
 
-Following the Ellipsoid formation, the fragments will continue to spread out until they are approximately uniformly distributed in a ring shape. This is a natural consequence of the velocity distribution used to determine the change in velocity for each fragment.
+Following the Ellipsoid formation, the fragments will continue to spread out until they are approximately uniformly distributed in a ring shape. This is a natural consequence of the slightly differing velocities each fragment has. 
 
-To determine once the ring formation has occurred, we must shift to a statistical view point.
+To determine when the ring formation has occurred, we must shift to a statistical view point.
 
-The first step is to determine how spread out the fragments are along their paths as initially, they will all be at the same location, spreading out as their locations are propagated forward in time.
+Given the fragments begin at a shared location, the first step is to establish how spread out they become across time.
 
-To measure their spread we will define a particle-based flux. This is accomplished by creating an xz plane in the equatorial coordinate system and detecting when particles have switched from one side of the plane to the other. Plotting the results will show peaks when the fragments pass through that will converge to some value as the fragments become uniformly spread out.
+To measure the fragments' spread we will define a particle-based flux. This is accomplished by creating an xz plane in the equatorial coordinate system and detecting when particles have switched from one side of the plane to the other. Plotting the results will show peaks when the fragments pass through, which will converge to some value as the fragments become uniformly spread out.
 
 \begin{code}
 	\captionof{listing}{Characteristic Length Implementation} 
@@ -823,27 +827,27 @@ To measure their spread we will define a particle-based flux. This is accomplish
 	\end{tcbpythoncode}
 \end{code}
 
-$X[:-1, :, 1] < 0$ is taking the y coordinates of all debris from the first time step to the second to last time step and checking if they are negative. It will assign a True to the negative ones and a False to the positive ones. Similarly, $X[1:, :, 1] > 0$ is doing the same thing but checking if the debris y coordinates are positive from the second time step to the last time step. By using a boolean and we now have an array that contains True when a fragment has switched from negative to positive between successive time steps and a false otherwise.
+$X[:-1, :, 1] < 0$ is taking the y coordinates of all debris from the first time step to the second to last time step and checking if they are negative. It will assign a True to the negative values and a False to the positive values. Similarly, $X[1:, :, 1] > 0$ is doing the same thing but checking if the debris y coordinates are positive from the second time step to the last time step. Using a boolean array, we now have an array that contains True when a fragment has switched from negative to positive between successive time steps and a false otherwise.
 
-By using np.sum on this boolean array, we assign a 1 to true and a 0 to false and as such can count all of the fragments in a given timestep that has switched from a negative y coordinate to a positive one. As such, we now have defined a flux for the fragments that gives information about how spread out the fragments are.
+By using np.sum on this boolean array, we assign a 1 to true and a 0 to false and as such can count all of the fragments in a given timestep that have switched from a negative y coordinate to a positive one. Therefor, we have defined a flux for the fragments that gives information about the spread of all fragments.
 
 \begin{figure}[t]
 	\begin{adjustbox}{max width=1.6\linewidth,center}
 		\centering     %%% not \center
 		\subfigure[]{\label{fig:a}\includegraphics[width=0.8\textwidth]{Flux_v_Time}}
-		\subfigure[]{\label{fig:b}\includegraphics[width=0.8\textwidth]{ConvergenceRatio_v_Time}}
+		\subfigure[]{\label{fig:b}\includegraphics[width=0.8\textwidth]{Convergence_Ratio_v_Time}}
 	\end{adjustbox}
-	\caption{The flux of the fragments as a function of time \textbf{(a)} and the convergence ratio of the flux as a function of time \textbf{(b)} }
+	\caption{The flux of the fragments as a function of time \textbf{(a)} \cite{plotly1} and the convergence ratio of the flux as a function of time \textbf{(b)}  \cite{plotly2}}
 \end{figure}
 
-Plotting the flux over time shows these expected peaks and what seems to be it converging to some value. However, the data is quite noisy and we need a concrete method to determine once the fragments have uniformly distributed. As such, we need to develop a method to test for when the data has converged.
+Plotting the flux over time shows these expected peaks and what seems to be it converging to some value. However, the data is quite noisy and we need a concrete method to determine when the fragments will be distributed uniformly. As such, we need to develop a method to test for when the data has converged.
 
  \subsubsection{Convergence}
  
  Using methods from statistical mechanics, we can derive a method for determining when the flux of the fragments approximately converges to some steady value.
- The first assumption that we will be making is that the motion an individual fragment is independent of the motion of all other fragments. This is a safe assumption to make as we are neglecting any inter gravitational forces between the fragments. (ANOTHER ASSUMPTION HERE)
+ The first assumption is that by neglecting inter gravitational forces, the motion of an individual fragment is independent of the motion of all other fragments.  (ANOTHER ASSUMPTION HERE)
  
- Assuming that each fragment crossing the plane used for determining the flux is uniformally distributed in time. Pick the last N points that will pass in some time greater than 1 period. Call the total fragments crossing during that time M.
+ If we assume that each fragment crossing the plane is uniformally distributed in time, picking the last N points that will pass in some amount of time greater than 1 period. Call the total fragments crossing during that time M.
  
  The probability a fragment crossing at time $t_i$ is $\frac{1}{N}$. Thus the probability of $m$ fragments crossing between time $t_i$ and $t_{i+1}$ is defined as follows
  
@@ -866,9 +870,9 @@ Similarly, we can compute the variance as
 	<(n-<n>)^2> = \sum_{n=0}^{N}(n - \frac{N}{m})^2 * P_n = P * N (1 - P)
 \end{equation}
 
-With $N, M$ being much larger than 1 we get the variation is approximately equal to the mean.
+With $N, M$ being much larger than 1 we get a variation approximately equal to the mean.
 
-We now have enough information to define a convergence ratio. If we divide the variation by the mean over a given interval, it will approximately equal to 1 if the number of fragments crossing during that interval is uniform.
+We now have enough information to define a convergence ratio. If we divide the variation by the mean over a given interval, it will approximately equal 1 if the number of fragments crossing the plane during that interval is uniform.
 
 WRITE ABOUT PINCH POINT
 
@@ -936,7 +940,57 @@ $I_n(z)$ represents the modified Bessel function with order $n$, where $z = \fra
 $$
 I_k(z) = \dfrac{1}{\pi} \int_{0}^{\pi} e^{z\cos(\theta)}\cos(k\theta)d\theta \:\:\:\:\:\: k \in Z.
 $$
-Following the precedents of many other texts, we will be assuming that the fragments are spherical in nature and have a drag coefficient of approximately 2.2.
+
+Following the precedents of many other texts, we will be assuming that the fragments have a drag coefficient of 0.7.
+
+Modifications were made by Frey et. al to find more appropriate boundary conditions and to increase the accuracy of each phase by including more terms of the series expansion.
+
+The first modification to the King-Hele implementation is to introduce two functions, $k_a$  and $k_e$, that are used for describing the rate of change of $a$ and $e$ in all eccentricity regimes. \cite{frey_extension_2019}
+\begin{equation*}
+	\begin{aligned}
+	k_a &=  \delta \sqrt{\mu a}\rho(h_p)\\
+	k_e &= k_a / a
+	\end{aligned}
+\end{equation*}
+
+
+For circular orbits, e = 0, the change in a and e can be solved using the following expression:
+\begin{equation*}
+	\begin{aligned}
+		\frac{da}{dt} &= -k_a\\
+		\frac{de}{dt} &= 0
+	\end{aligned}
+\end{equation*}
+
+For low eccentric orbits, $e < e_b(a, H)$, a series expansion in e is performed and integrated using the first kind modified Bessel function as:
+\begin{equation}
+		\frac{da}{dt}  = -k_a * \exp(-z) * (\boldsymbol{e}^T * \boldsymbol{K_a^l} * \boldsymbol{I} + O(e^6))
+\end{equation}
+\begin{equation}
+	\frac{de}{dt}  = -k_e* \exp(-z) * (\boldsymbol{e}^T * \boldsymbol{K_e^l} * \boldsymbol{I} + O(e^6))
+\end{equation}
+
+where:\begin{align}
+	 \boldsymbol{e}^T &=(1\quad  e\quad e^2\quad e^3\quad e^4\quad e^5)\\
+	\boldsymbol{I}^T &=(I_0\quad  I_1\quad I_2\quad I_3\quad I_4\quad I_5\quad I_6)\\
+	\boldsymbol{K_a^l} &= \begin{bmatrix}
+		1 & 0 & 0 & 0 &0&0 &0\\
+		0 & 2 & 0 & 0 &0&0 &0\\
+		\frac{3}{4} & 0 & \frac{3}{4} & 0 &0&0 &0\\
+		0 & \frac{3}{4} & 0 & \frac{1}{4} &0&0 &0\\
+	    \frac{21}{64} & 0 & \frac{28}{64} & 0 &\frac{7}{64}&0 &0\\
+	    0 & \frac{30}{64} & 0 & \frac{15}{64} &0&\frac{3}{64} &0\\
+	\end{bmatrix}\\
+	\boldsymbol{K_e^l} &= \begin{bmatrix}
+		0 & 1 & 0 & 0 &0&0 &0\\
+		\frac{1}{2} & 0 & \frac{1}{2} & 0 &0&0 &0\\
+		0 & -\frac{5}{8}  & 0 & \frac{1}{8}  &0&0 &0\\
+		-\frac{5}{16}  & 0 & -\frac{4}{16}  &0 &\frac{1}{16} &0 &0\\
+		0 & -\frac{18}{128} & 0& -\frac{1}{128}  &0&\frac{3}{128}  &0\\
+		-\frac{18}{256}  & 0 & -\frac{19}{256}  & 0 &\frac{2}{256} &0 &\frac{3}{256} \\
+	\end{bmatrix}
+\end{align}
+The vast majority of the debris fall in the low eccentricity range, as such only the circular and low eccentricity expressions are implemented. The high eccentricity range has a similar formulation provided by (Stefan Frey) in ().
 
 The implementation of drag, and other perturbations is contained in the \hyperref[subsec:perts]{appendix}
 
@@ -962,14 +1016,6 @@ The effects of nodal precession on the ascending and descending nodes is express
 where $p = a(1 - e^2)$ is the semi-latus rectum of the orbit, $\bar{n}=\sqrt{\mathstrut\dfrac{\mu_E}{a^3}}$ is the mean motion, $R_E$ is the radius of the Earth, and $J_2$ is the Earths second dynamic form factor.
 
 The J2 term is a result of an infinite series equation that describes the perturbation effects of a rotating planetary body on the gravity of a planet. Each term of the series is denoted as $J_n$, however the $J_2$ term is more than 1000 times larger than the other terms (Ai soln. j2 perturbation). This is why the J2 effect is considered a relevant orbital perturbation for the evolution of an orbital debris cloud. For context, Earth's  $J_2$ term has a value of $0.108 \times 10^{-2}$ whereas its $J_3$ term has a value of $0.253 \times 10^{-5}$.
-
-
-
-
-
-\subsection{Band}
-
-
 
 
 
