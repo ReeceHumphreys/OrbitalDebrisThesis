@@ -83,38 +83,6 @@
 	minted language = python
 }
 
-% Python style for highlighting
-\newcommand\pythonstyle{\lstset{
-		language=Python.
-		basicstyle=\tt\footnotesize,
-		otherkeywords={self},             % Add keywords here
-		keywordstyle=\bf\color{deepblue},
-		emph={MyClass,__init__},          % Custom highlighting
-		emphstyle=\bf\color{deepred},    % Custom highlighting style
-		stringstyle=\color{deepgreen},
-		frame=tb,                         % Any extra options here
-		showstringspaces=false,            % 
-		breaklines=true
-}}
-
-
-% Python environment
-\lstnewenvironment{python, title}[1][]
-{
-	\pythonstyle
-	\lstset{title}
-	\lstset{#1}	
-}
-{}
-
-% Python for external files
-\newcommand\pythonexternal[2][]{{
-		\pythonstyle
-		\lstinputlisting[#1]{#2}}}
-
-% Python for inline
-\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
-\graphicspath{{./figures/}}
 
 % NEWEST CODE FOFRMTATTING
 
@@ -464,29 +432,18 @@ To determine the characteristic lengths that will be used in the simulation, it 
 
 Utilizing the implementation described by Letizia for CiELO, To determine the characteristic length of each piece of debris, first 100 bins are created that are equally spaced on a logarithmic scale between 1mm and 10 cm. Then the number of debris that will be in each bin is computed utilizing the experimental observations of collisions and explosions. Finally to determine the characteristic length of each piece of debris, a randomly sampled value is drawn from the bin that the debris is contained in. \cite{letizia_space_2016}
  
-\newpage
-
- \begin{code}
- 	\captionof{listing}{Characteristic Lenght Implementation}
- 	\begin{tcbpythoncode}
- 		def characteristic_lengths(m_target, m_projectile, v_impact, is_catastrophic, debris_type, explosion):
- 		bins = np.geomspace(0.001, 0.1, 100)
- 		N_fragments = [number_fragments(b, m_target, m_projectile, v_impact, is_catastrophic, debris_type, explosion) for b in bins ]
- 		N_fragments = (np.array(N_fragments)).astype(int)
- 		
- 		L_c = np.concatenate([uniform(bins[i], bins[i+1], size=N_fragments[i]) for i in range(len(bins) - 1)])
- 		
- 		return L_c
- 	\end{tcbpythoncode}
- \end{code}
  
+ %
+ % ORIGINALLY CODE ABOUT CHARACTERISTIC LENGHT IMPLEMENTATIONS WAS HERE
+ %
+\newpage
  
  
 As mentioned above, since collisions and explosions are fundamentally different, the function that generates the number of debris in a given bin must account for this difference. This is accomplished by specifying whether the given even is a collision or explosion first. In the case that the event is an explosion. The number of explosive fragments of size $L_c$ is governed by the following equation:
 $$N(L_c) =S * 6 * L_c^{-1.6}$$
 With S = 1, the relationship has been observed to be valid for rocket upper stages with masses in the range of 600-1000 kg (Johnson et al 2001). However, for explosions due to other malfunctions such as battery explosions, anti-satellite tests etc. S having a range between 0.1 to 1 was found to be a good approximate solution where the value of S depends on the explosive body type (Krisko 2001). 
 
-In the case of a collision, a distinction must be made, if the collision was catastrophic or non catastrophic. A collision is categorized as catastrophic if it causes the complete fragmentation of both the impactor and the target (Letizia) \cite{letizia_space_2016}. This occurs when the energy per target mass exceeds $40 J * g^{-1}$(Krisko 2007). The number of produced fragments for a collision is governed by the following :
+In the case of a collision, a distinction must be made, if the collision was catastrophic or non catastrophic. A collision is categorized as catastrophic if it causes the complete fragmentation of both the impactor and the target (Letizia) \cite{letizia_space_2016}. This occurs when the energy per target mass exceeds $40 J * g^{-1}$(Krisko 2007) \cite{krisko_proper_2011}. The number of produced fragments for a collision is governed by the following :
 
 $$N(L_c [m]) = 0.1 * (M_e)^{0.75} * L_c^{-1.71}$$
 
@@ -496,25 +453,14 @@ $$N(L_c [m]) = 0.1 * (M_e)^{0.75} * L_c^{-1.71}$$
 
 \noindent $M_t$ is the target mass, $M_p$ is the projectile mass, $v_c$ is the relative impact velocity between the target and the projectile.
 
-
- \begin{code}
-	\captionof{listing}{Characteristic Lenght Implementation} 
-	\begin{tcbpythoncode}
-		def number_fragments(l_characteristic, m_target, m_projectile, v_impact, is_catastrophic, debris_type, explosion):
-		if explosion == True: 
-		return 6*(l_characteristic)**(-1.6) # Can be multiplied by scaling factor S
-		else:
-		m_ref = 0 	# Defining reference Mass
-		if is_catastrophic: m_ref = m_target + m_projectile
-		else: m_ref = m_projectile * (v_impact)**2
-		return 0.1 * (m_ref)**0.75 * l_characteristic**-1.71
-	\end{tcbpythoncode}
-\end{code}
+ %
+% ORIGINALLY CODE ABOUT NUMBER OF FRAGMENTS WAS HERE
+%
 
 \newpage
 \subsubsection{Area to Mass Distribution }
 
-The area-to-mass ratio, A/M, for fragments is a distribution that was based on analysis of thousands of fragmentation debris and provides us with a method to gain information that will be crucial when computing the perturbations on each fragment. The discrete distributions were found by using a $\chi^2$ fit to orbital decay characteristics for 1,780 upper stage explosion fragments, and similar data was developed for spacecraft fragments (Johnson et. al). There are three main producers of orbital debris, rocket bodies, R/B, spacecraft, S/C, and small satellites, soc. For simplicity only the soc distribution function is provided in this paper as the scenario that this paper aims to simulate is for a satellite explosion. However, the implementation for rocket bodies and spacecraft is included in the source code.
+The area-to-mass ratio, A/M, for fragments is a distribution that was based on analysis of thousands of fragmentation debris and provides us with a method to gain information that will be crucial when computing the perturbations on each fragment. The discrete distributions were found by using a $\chi^2$ fit to orbital decay characteristics for 1,780 upper stage explosion fragments, and similar data was developed for spacecraft fragments (Johnson et. al)\cite{johnson_nasas_2001}. There are three main producers of orbital debris, rocket bodies, R/B, spacecraft, S/C, and small satellites, soc. For simplicity only the soc distribution function is provided in this paper as the scenario that this paper aims to simulate is for a satellite explosion. However, the implementation for rocket bodies and spacecraft is included in the source code.
 
 For small objects, with $L_c < 8$cm, the A/M distribution is expressed as:  $$D_{A/M}(\lambda_c, \chi) = \mathcal{N}(\mu_{A/M}, \sigma_{A/M}(\lambda_c), \chi) $$
 
@@ -545,24 +491,9 @@ and the  \mintinline{Python}{std_dev_factory} function calls are to generate the
 
 \newpage
  
-\begin{code}
-	\captionof{listing}{Characteristic Length Implementation} 
-	\begin{tcbpythoncode}
-		def distribution_AM(lambda_c, debris_type):
-		N = len(lambda_c)
-		lambda_c = np.array(lambda_c)
-		# Generates mu_AM and sigma_AM depending on type of object (RB, SC, SOC)
-		mean_factory = make_mean_AM(debris_type)
-		std_dev_factory = make_standard_dev_AM(debris_type)
-		mean_preSwitch = np.array(mean_factory(lambda_c)) 
-		std_dev_preSwitch = np.array(std_dev_factory(lambda_c))
-		switch = np.random.uniform(0,1, N)
-		# Pulling a random value from the distribution
-		means = mean_preSwitch[0]
-		devs = std_dev_preSwitch[0]
-		return np.random.normal(means, devs, N)
-	\end{tcbpythoncode}
-\end{code}
+\ %
+% ORIGINALLY CODE ABOUT DISTRIBUTION OF AM HERE
+%
 
 The average cross-sectional area, A, also can be obtained through a one-to-one correspondence with $L_c$ using the following expression:
 \begin{align}
@@ -572,16 +503,9 @@ The average cross-sectional area, A, also can be obtained through a one-to-one c
 	\end{cases}
 \end{align}
 
-\begin{code}
-	\captionof{listing}{Characteristic Length Implementation} 
-	\begin{tcbpythoncode}
-		def avg_area(L_c):
-		if L_c < 0.00167: #(m)
-		return 0.540424 * L_c**2
-		else:
-		return 0.556945 * L_c**2.0047077
-	\end{tcbpythoncode}
-\end{code}
+ %
+% ORIGINALLY CODE ABOUT AVG AREA
+%
 
 Since the cross sectional area is known and the area to mass ratio is also known, we can now obtain the mass M simply by $$M = A_x / (A/M)$$
 
@@ -595,36 +519,20 @@ Since the cross sectional area is known and the area to mass ratio is also known
 	 \sigma_{v}(\chi) &= 0.4
 \end{align}
 
-\begin{code}
-	\captionof{listing}{Characteristic Length Implementation} 
-	\begin{tcbpythoncode}
-		def distribution_deltaV(kai, v_c, explosion=True):
-		N = len(kai)
-		mean = mean_deltaV(kai, explosion)
-		dev = std_dev_deltaV()
-		base = 10
-		centered = np.random.normal(0, dev, N)
-		I = np.nonzero(base**(mean+centered)>1.3*v_c)[0]
-		n = len(I)
-		while n != 0:
-			centered[I] = np.random.normal(0, dev, n)
-			#I = np.nonzero(base**(mean+centered)>1.3*v_c)[0]
-			J = np.nonzero(base**(mean[I] + centered[I]) >1.3*v_c)[0]
-			I = I[J]
-			n = len(I)
-		
-		return base**centered
-	\end{tcbpythoncode}
-\end{code}
+ %
+% ORIGINALLY CODE ABOUT DELTA V
+%
+
 
 \newpage
 \subsection{Validating the Implementation}
 Due to the niche nature of orbital debris analysis, it can generally be challenging to find any full implementation of the breakup model. Additionally, many of various space agencies around the world do not share the details of how they implemented the models. For this reason, the above implementations were largely modeled after the details given in the CiELO (Latizia) which mimicks the information provided in NASA literature.
 
-To validate that the python implementation was performed correctly, a comparison is made to existing data provided by various space agencies for a given scenario. This scenario is a  explosion event with a rocket body that weighs 1000kg and the data was provided by Rossi et. al. in "NASA Breakup Model Implementation Comparison of Results".
+To validate that the python implementation was performed correctly, a comparison is made to existing data provided by various space agencies for a given scenario. This scenario is a  explosion event with a rocket body that weighs 1000kg and the data was provided by Rossi et. al. in "NASA Breakup Model Implementation Comparison of Results"\cite{rossi_nasa_nodate}.
 
-As shown in the table below, the data from the various space agencies has some significant differences, especially for the characteristic length in the > 1mm range despite all implementing the same NASA breakup model. This is most likely a result of ambiguities in the original NASA breakup model specification literature as well as differences in how various programming languages perform random sampling. The goal of the python implementation is to be within the original deviations of the data. ... 
+As shown in the table below, the data from the various space agencies has some significant differences, especially for the characteristic length in the > 1mm range despite all implementing the same NASA breakup model. This is most likely a result of ambiguities in the original NASA breakup model specification literature as well as differences in how various programming languages perform random sampling. The goal of the python implementation is to be within the original deviations of the data. DEFINE STANDARD DEV FOR EACH COLUMN AND VERIFY MY DATA IS WITHIN THOSE BOUNDS.
 
+ 
 \begin{table}[H]
 		\noindent\makebox[\textwidth]{
 				\begin{tabular}{|lccccccc|}
@@ -644,7 +552,7 @@ As shown in the table below, the data from the various space agencies has some s
 				DLR                                                   & 1,217,054 & 11,724 & 230 & 0 & 25,844                    & 31,124                    & 31,124   \\
 				ESA                                                   & 324,886   & 8,159  & 206 & 6 & 2,093                     & 5,024                     & 98,717   \\
 				NASA                                                  & 434,928   & 10,731 & 248 & 8 & 2,525                     & 6,416                     & 132,032  \\
-				\textit{Python Implementation}                        & -         & -      & -   & - & -                         & -                         & -        \\ \hline
+				\textit{Python Implementation}                        & 378,525         & 9,479     & 223  & 6 & 3613                         & 5,850                         & 120,481        \\ \hline
 			\end{tabular}
 		}
 		\caption{(Data Source: NASA Breakup Model Implementation Comparison of results, A. Rossi, 24th IADC Meeting April 2006) }
@@ -992,7 +900,7 @@ where:\begin{align}
 \end{align}
 The vast majority of the debris fall in the low eccentricity range, as such only the circular and low eccentricity expressions are implemented. The high eccentricity range has a similar formulation provided by (Stefan Frey) in ().
 
-The implementation of drag, and other perturbations is contained in the \hyperref[subsec:perts]{appendix}
+The implementation of drag, and other perturbations is contained in the \hyperref[subsec:propagation]{appendix}
 
 \subsubsection{Nodal Precession}
 
@@ -1022,61 +930,14 @@ The J2 term is a result of an infinite series equation that describes the pertur
 
 
 
-%==========================================================================
-
-%\section{Single Photon Down Conversion}
-%
-%
-%\begin{gather}
-%	|\psi_R\rangle = r|\psi_A\rangle +t|\psi_B\rangle 
-%	\label{eq:first} \\
-%	|\psi_T\rangle = t|\psi_A\rangle +r|\psi_B\rangle 
-%	\label{eq:second} \\
-%	P_A=\langle\psi_A|\psi_{input}\rangle^2
-%	\label{eq:third}
-%\end{gather}
-%
-%Equations \eqref{eq:first}-\eqref{eq:second} describe some kind of decomposition of a quantum state on a basis. 
-%Equation \eqref{eq:third} is some kind of probability.
-%As discussed in section \ref{introduction}...
-
-%\section{A table and a figure}
-
-%\subsection{A table}
-
-%\begin{table}[h]
-%	\centering
-%	\begin{tabular}{|c|c|c|} \hline
-%		I guess & I have & to make \\ \hline
-%		a table & now & ... \\ \hline
-%	\end{tabular}
-%	\caption{Test table.}
-%\end{table}
-
-%\subsection{A figure}
-
-%\begin{figure}[h]
-%	\centering
-%	\includegraphics[width=0.4\linewidth]{honors_college}
-%	\includegraphics[width=0.4\linewidth]{fig1_2a_pour_yariv}
-%	\caption{Test figure.}
-%\end{figure}
-%
-
-%It all becomes clear if you read \cite{Fily2017}.
 
 
 %==========================================================================
 %==========================================================================
 % Appendices
 
-%\appendix
-
 \printindex
-
-%\section{An appendix}
-
-%==========================================================================
+================================================
 
 %\section{An other appendix}
 
@@ -1088,15 +949,25 @@ The J2 term is a result of an infinite series equation that describes the pertur
 \bibliographystyle{plain}
 \bibliography{honors_thesis_bibliography} % Use the name of you bibliography file. Omit the ".bib" extension.
 
+\newpage
 \begin{appendices}
+	Write a description of what each section of the appendix covers
 	\section{Code}
 	
-	\subsection{Test}
+	\subsection{Breakup Model}
+	\label{subsec:breakup}
+	\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
+	{code/OrbitalDebris/generate_debris.py}
 	
-	\subsection{Perturbations}
-	\label{subsec:perts}
-	%\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 61, lastline = 126]
-	%{code/OrbitalDebris/Perturbations.py}
+	\subsection{Coordinate Transforms}
+	\label{subsec:transform}
+	\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
+	{code/OrbitalDebris/CoordTransforms.py}
+	
+	\subsection{Orbit Propagation}
+	\label{subsec:propagation}
+	\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
+	{code/OrbitalDebris/Perturbations.py}
 
 	
 	%\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]
