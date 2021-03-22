@@ -17,6 +17,105 @@
 \usepackage{mathtools}
 \usepackage[toc,page]{appendix}
 \usepackage[round]{natbib}
+\graphicspath{ {figures/} }
+\usepackage{array}
+
+% adding list of symbols
+\usepackage{glossaries}
+\makeglossaries
+\newglossaryentry{rel_velocity}{
+	name=\ensuremath{\Delta v},
+	description={Relative velocity [km/s]}
+}
+\newglossaryentry{flux}{
+	name=\ensuremath{\Phi},
+	description={Flux of fragments}
+}
+\newglossaryentry{mean}{
+	name=\ensuremath{\mu},
+	description={Mean value}
+}
+\newglossaryentry{grav_param_E}{
+	name=\ensuremath{\mu_E},
+	description={Earth's planetary gravitational constant [km3/ s2]}
+}
+\newglossaryentry{true_anomaly}{
+	name=\ensuremath{\nu},
+	description={True anomaly [rad or deg]}
+}
+\newglossaryentry{raan}{
+	name=\ensuremath{\Omega},
+	description={Longitude of the ascending node [rad or deg]}
+}
+\newglossaryentry{argp}{
+	name=\ensuremath{\omega},
+	description={Argument of the periapsis [rad or deg]}
+}
+\newglossaryentry{density}{
+	name=\ensuremath{\rho},
+	description={Atmosphere density [kg / m3]}
+}
+\newglossaryentry{area}{
+	name=\ensuremath{A},
+	description={Cross-sectional area [m2]}
+}
+\newglossaryentry{semi_major_axis}{
+	name=\ensuremath{a},
+	description={Semi-major axis [km]}
+}
+\newglossaryentry{eccentricity}{
+	name=\ensuremath{e},
+	description={Eccentricity}
+}
+\newglossaryentry{scale_height}{
+	name=\ensuremath{H},
+	description={Scale height for exponential atmospheric model [km]}
+}
+\newglossaryentry{altitude}{
+	name=\ensuremath{h},
+	description={Altitude [km]}
+}
+\newglossaryentry{inclination}{
+	name=\ensuremath{i},
+	description={Inclination [rad or deg]}
+}
+\newglossaryentry{bessel}{
+	name=\ensuremath{I_k},
+	description={Modified Bessel function of the first kind and order k }
+}
+\newglossaryentry{J2}{
+	name=\ensuremath{J_2},
+	description={Second zonal harmonic coefficient for the Earth }
+}
+\newglossaryentry{L_c}{
+	name=\ensuremath{L_c},
+	description={Fragment characteristic length [m] }
+}
+\newglossaryentry{mass}{
+	name=\ensuremath{M},
+	description={Mass [kg] }
+}
+\newglossaryentry{reference_mass}{
+	name=\ensuremath{M_e},
+	description={Reference mass for collisions[kg] }
+}
+\newglossaryentry{prjectile_mass}{
+	name=\ensuremath{M_p},
+	description={Projectile mass[kg] }
+}
+\newglossaryentry{target_mass}{
+	name=\ensuremath{M_t},
+	description={Target mass[kg] }
+}
+\newglossaryentry{normal_distribution}{
+	name=\ensuremath{\mathcal{N}},
+	description={Normal distribution }
+}
+\newglossaryentry{impact_vel}{
+	name=\ensuremath{v_c},
+	description={Relative impact velocity [km/s] }
+}
+
 % Matrix stretching
 \renewcommand{\arraystretch}{0.5} % because \baselinestretch is 1.6667
 
@@ -357,7 +456,7 @@ Date
 
 \myskip
 \doublespace
-Orbital debris has quickly become one of the newest sources of pollution as a result of mankind's desire to work in, explore, and utilize space. However, unlike most types of pollution which people experience daily, this is pollution that is impossible for the average person to ever encounter, yet poses just as grand of a threat as the other types. Orbital debris are the remnants of orbital collisions, weapons tests, decommissioned satellites, and spent rocket stages that are passing over our heads faster than bullets and containing similar energy to hand grenades. This paper explores the existing models of orbital debris generation, how clouds of debris evolve with respect to time, and the ramifications that they pose.
+Orbital debris has quickly become one of the newest sources of pollution as a result of mankind's desire to work in, explore, and utilize space. However, unlike most types of pollution which people experience daily, this is pollution that is impossible for the average person to ever encounter, yet poses just as grand of a threat as the other types. Orbital debris are the remnants of orbital collisions, weapons tests, decommissioned satellites, and spent rocket stages that are passing over our heads faster than bullets and containing similar energy to hand grenades. This paper explores the existing models of orbital debris generation, how clouds of debris evolve with respect to time, and the ramifications that they pose. The \Gls{rel_velocity} typesetting markup language.
 \singlespace
 \newpage
 
@@ -365,12 +464,20 @@ Orbital debris has quickly become one of the newest sources of pollution as a re
 
 \tableofcontents
 
-%\listoftables
-\listoffigures
+\cleardoublepage
+\addcontentsline{toc}{section}{\listfigurename}\listoffigures
+
+\cleardoublepage
+\addcontentsline{toc}{section}{\listtablename}\listoftables
+
+\glsaddall
+\cleardoublepage
+\addcontentsline{toc}{section}{List of Symbols}\printglossary[title={List of Symbols}, nonumberlist]
+
 
 
 %==========================================================================
-
+\newpage
 \setlength{\parindent}{1em}
 \pagenumbering{arabic}
 
@@ -393,13 +500,11 @@ Following the implementation of the breakup model, the implementation of dominan
 
 Finally a case study showing the magnitude of orbital collisions is shown along with an analysis on the potential for the Kessler syndrome to occur given the increase in launch cadence and recent expansions into constructing satellite mega constellations.
 
-\subsection{Past research and Roadmap}
-*** Include what past researchers have explored and where my research fits in*** \newline
-An outline of the roadmap for this paper is as follows: \newline 
-\textbf{Chapter 1:}  \newline 
-\textbf{Chapter 2:}  \newline 
-\textbf{Chapter 3:}  \newline 
-\textbf{Chapter 4:}   \newline 
+\subsection{Roadmap}
+\textbf{Chapter 1:}  Introduction to Orbital debris and the process of modeling them \newline 
+\textbf{Chapter 2:} Details the implementation of the NASA breakup model to simulation a fragmentation event \newline 
+\textbf{Chapter 3:} Reparameterization of the orbital debris to orbital elements and the benefits this yields  \newline 
+\textbf{Chapter 4:} Explains the different phases of the orbital debris cloud and how the propagation of each phase is conducted  \newline 
 \singlespace
 
 \section{Modeling Satellite Breakups}
@@ -439,7 +544,7 @@ The creation of the characteristic lengths was not given in the original specifi
 
 To determine the number of fragments in each characteristic length bin it is crucial to first recognize that collisions and explosions will produce different types of fragments. Explosions will produce larger debris fragments with smaller velocities while collisions tend to generate a large number of small fragments with high velocities \citep{barrows_evolution_1996}.  As such, the number of fragments in each bin will be determined by different power laws based on the type of breakup event.
  
-The number of explosive fragments of size $L_c$ is governed by the following equation:
+The number of explosive fragments of size \Gls{L_c} is governed by the following equation:
 \begin{equation}
 	N(L_c) =6*S * L_c^{-1.6}
 \end{equation}
@@ -449,14 +554,14 @@ In the case of a collision, a distinction must be made, if the collision was cat
 \begin{equation}
 	N(L_c [m]) = 0.1 * (M_e)^{0.75} * L_c^{-1.71}
 \end{equation}
-Where $M_e$ is defined as follows: 
+Where \Gls{reference_mass} is defined as follows: 
 \begin{equation}
 	M_e[kg] = \begin{cases}
 		M_t [kg] + M_p[kg]& \text{Catastrophic collision: } \\
 		 M_p[kg] * (v_c [km/s] / 1 [km/s])^2 & \text{Non Catastrophic collision}	
 	\end{cases}
 \end{equation}
-\noindent $M_t$ is the target mass, $M_p$ is the projectile mass, $v_c$ is the relative impact velocity between the target and the projectile.
+\noindent \Gls{target_mass} is the target mass, \Gls{prjectile_mass} is the projectile mass,\Gls{impact_vel} is the relative impact velocity between the target and the projectile.
 
 Figure (x) shows the algorithm for the creating the characteristic length distribution described above.  The resulting distribution that is produced by the python implementation for a test scenario is given in figure (X). Additionally, the python implementation can be found in the appendix in section (X).
 \begin{figure}[H]
@@ -478,7 +583,7 @@ $D_{A/M}$ is the distribution function of $\chi$ as a function of $\lambda_c$, w
 	\lambda_c &= \log_{10}(L_c),\\
 	\chi &= \log_{10}(A/M)
 \end{align}
-$\mathcal{N}$ is the normal distribution function with mean $\mu_{A/M}$ and standard deviation $\sigma_{A/M}$, where
+\Gls{normal_distribution} is the normal distribution function with mean $\mu_{A/M}$ and standard deviation $\sigma_{A/M}$, where
 
 \begin{align}
 	 \mu_{A/M} &= \begin{cases} 
@@ -494,7 +599,7 @@ $\mathcal{N}$ is the normal distribution function with mean $\mu_{A/M}$ and stan
 
 Every fragment of debris has a corresponding A/M distribution since both $\mu_{A/M}$ and $\sigma_{A/M}$ are functions of $\lambda_c$. To determine the corresponding A/M ratio for each debris, a random value is drawn from the distribution. This accounts for stochastic nature of breakup events mentioned previously. 
 
-The A/M ratio alone does not provide enough information to determine both the area and mass of a fragment. As such the average cross-sectional area, A, can also be obtained through a one-to-one correspondence with $L_c$ using the following expression \citep{johnson_nasas_2001}:
+The A/M ratio alone does not provide enough information to determine both the area and mass of a fragment. As such the average cross-sectional area, A, can also be obtained through a one-to-one correspondence with \Gls{L_c} using the following expression \citep{johnson_nasas_2001}:
 \begin{align}
 	A_x = \begin{cases}
 		0.540424 * L_c^2 & \text{where } L_c < 0.00167 m \\
@@ -519,7 +624,7 @@ The differential amount of velocity that each fragment will gain due to the brea
 
 More explicitly the velocity check is performed by sampling a value from the velocity distribution, and checking if it is lower than $1.3v_c$, where $v_c$ is the relative collision velocity. If the value fails the check then new values are drawn until the check is passed \citep{letizia_space_2016}.
 
-The change in velocity, $\Delta v$,  log-normal distribution a function of the A/M ratio as additionally it is a log-normal distribution modeled as
+The change in velocity, \Gls{rel_velocity},  log-normal distribution a function of the A/M ratio as additionally it is a log-normal distribution modeled as
 \begin{equation}
 	D_{\Delta v}= \mathcal{N}(\mu_{v}(\chi), \sigma_{v}(\chi), \xi)
 \end{equation}
@@ -532,7 +637,7 @@ The change in velocity, $\Delta v$,  log-normal distribution a function of the A
 
 The differential velocity vector is constructed by sampling from a uniform distribution for a velocity unit vector and then scaling it with the values from the log-normal distribution. 
 
-It should be noted that details for efficiently handling the resampling of velocities are sparse. As such, the python implementation of the velocity distribution often takes tens of thousands of iterations to complete. Often one or two fragments have an area to mass ratio that causes the log-normal distribution to be highly unlikely to return a value that is lower than $1.3v_c$. As such an iteration limit exists in the code that is set at 100,000 iterations to try and alleviate the computation time. If no suitable value is found before the maximum iteration limit is hit, a value of $1.3v_c $ is assigned to that piece of debris.
+It should be noted that details for efficiently handling the resampling of velocities are sparse. As such, the python implementation of the velocity distribution often takes tens of thousands of iterations to complete. Often one or two fragments have an area to mass ratio that causes the log-normal distribution to be highly unlikely to return a value that is lower than 1.3\Gls{impact_vel}. As such an iteration limit exists in the code that is set at 100,000 iterations to try and alleviate the computation time. If no suitable value is found before the maximum iteration limit is hit, a value of 1.3\Gls{impact_vel} is assigned to that piece of debris.
 
 
 \newpage
@@ -949,7 +1054,6 @@ The J2 term is a result of an infinite series equation that describes the pertur
 % Appendices
 
 \printindex
-================================================
 
 %\section{An other appendix}
 
@@ -963,23 +1067,23 @@ The J2 term is a result of an infinite series equation that describes the pertur
 
 \newpage
 \begin{appendices}
-	Write a description of what each section of the appendix covers
-	\section{Code}
-	
-	\subsection{Breakup Model}
-	\label{subsec:breakup}
-	\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
-	{code/OrbitalDebris/generate_debris.py}
-	
-	\subsection{Coordinate Transforms}
-	\label{subsec:transform}
-	\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
-	{code/OrbitalDebris/CoordTransforms.py}
-	
-	\subsection{Orbit Propagation}
-	\label{subsec:propagation}
-	\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
-	{code/OrbitalDebris/Perturbations.py}
+%	Write a description of what each section of the appendix covers
+%	\section{Code}
+%	
+%	\subsection{Breakup Model}
+%	\label{subsec:breakup}
+%	\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
+%	{code/OrbitalDebris/generate_debris.py}
+%	
+%	\subsection{Coordinate Transforms}
+%	\label{subsec:transform}
+%	\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
+%	{code/OrbitalDebris/CoordTransforms.py}
+%	
+%	\subsection{Orbit Propagation}
+%	\label{subsec:propagation}
+%	\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
+%	{code/OrbitalDebris/Perturbations.py}
 
 	
 	%\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]

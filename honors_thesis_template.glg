@@ -1,0 +1,7 @@
+This is makeindex, version 2.15 [TeX Live 2020] (kpathsea + Thai support).
+Scanning style file ./honors_thesis_template.ist.............................done (29 attributes redefined, 0 ignored).
+Scanning input file honors_thesis_template.glo....done (34 entries accepted, 0 rejected).
+Sorting entries....done (173 comparisons).
+Generating output file honors_thesis_template.gls....done (60 lines written, 0 warnings).
+Output written in honors_thesis_template.gls.
+Transcript written in honors_thesis_template.glg.
