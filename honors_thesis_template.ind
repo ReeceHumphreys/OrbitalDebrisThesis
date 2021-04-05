@@ -1,62 +1,63 @@
 \begin{theindex}
 
-  \item argument of periapsis, 21
-  \item ascending node, 18
-  \item atmospheric drag, 27
+  \item argument of periapsis, 23
+  \item ascending node, 20
+  \item atmospheric drag, 30
 
   \indexspace
 
-  \item Binomial distribution, 26
+  \item Binomial distribution, 29
 
   \indexspace
 
-  \item descending node, 18
+  \item descending node, 20
 
   \indexspace
 
-  \item Eccentric anomaly, 21
-  \item Exponential Atmospheric Model, 28
+  \item Earth-Centered Inertial (ECI) Coordinate system, 17
+  \item Eccentric anomaly, 23
+  \item Exponential Atmospheric Model, 31
 
   \indexspace
 
-  \item fundamental plane, 18
+  \item fundamental plane, 20
 
   \indexspace
 
-  \item inclination, 20
+  \item inclination, 22
 
   \indexspace
 
-  \item keplerian elements, 16
-  \item Keplers equation, 21
+  \item Keplerian elements, 17
+  \item Keplers equation, 24
 
   \indexspace
 
-  \item line of nodes, 18
-  \item longitude of the ascending node, 21
+  \item line of nodes, 20
+  \item longitude of the ascending node, 23
 
   \indexspace
 
-  \item mean anomaly, 21
+  \item mean anomaly, 24
 
   \indexspace
 
-  \item Nodal Precession, 33
-  \item Nodal precession, 33
+  \item Nodal Precession, 36
+  \item Nodal precession, 36
 
   \indexspace
 
-  \item orbital eccentricity, 20
-  \item orbital plane, 18
-  \item orbital state vectors, 16
+  \item orbital eccentricity, 22
+  \item orbital plane, 20
+  \item orbital state vectors, 17
 
   \indexspace
 
-  \item Semi-Major Axis, 19
-  \item specific angular momentum, 18
+  \item Semi-Major Axis, 21
+  \item specific angular momentum, 20
 
   \indexspace
 
-  \item true anomaly, 20
+  \item true anomaly, 23
 
 \end{theindex}

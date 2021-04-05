@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[a4paper, 12pt]{article}
 \usepackage{amsmath}
 \usepackage{setspace}
 \usepackage{hyperref}
@@ -19,6 +19,8 @@
 \usepackage[round]{natbib}
 \graphicspath{ {figures/} }
 \usepackage{array}
+
+\usepackage[a4paper,margin=1.5in]{geometry}
 
 % adding list of symbols
 \usepackage{glossaries}
@@ -122,6 +124,7 @@
 % Default fixed font does not support bold face
 \DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
 \DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
 
 % Custom colors
 \usepackage{color}
@@ -316,15 +319,6 @@
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
 
 
-
-
-%\usepackage[letter,margin=1.5in]{geometry}
-%\addtolength{\rightmargin}{-0.5in}
-%\addtolength{\textwidth}{0.5in}
-%\addtolength{\oddsidemargin}{-.875in}
-%\addtolength{\evensidemargin}{-.875in}
-%\addtolength{\textheight}{1.75in}
-
 \makeatletter
 \renewcommand\section{\clearpage\newpage\@startsection {section}{1}{\z@}%
 	{-3.5ex \@plus -1ex \@minus -.2ex}%
@@ -456,7 +450,7 @@ Date
 
 \myskip
 \doublespace
-Orbital debris has quickly become one of the newest sources of pollution as a result of mankind's desire to work in, explore, and utilize space. However, unlike most types of pollution which people experience daily, this is pollution that is impossible for the average person to ever encounter, yet poses just as grand of a threat as the other types. Orbital debris are the remnants of orbital collisions, weapons tests, decommissioned satellites, and spent rocket stages that are passing over our heads faster than bullets and containing similar energy to hand grenades. This paper explores the existing models of orbital debris generation, how clouds of debris evolve with respect to time, and the ramifications that they pose. The \Gls{rel_velocity} typesetting markup language.
+Orbital debris has quickly become one of the newest sources of pollution as a result of mankind's desire to work in, explore, and utilize space. However, unlike most types of pollution which people experience daily, this is pollution that is impossible for the average person to ever encounter, yet poses just as grand of a threat as the other types. Orbital debris are the remnants of orbital collisions, weapons tests, decommissioned satellites, and spent rocket stages that are passing over our heads faster than bullets and containing similar energy to hand grenades. This paper explores the existing models of orbital debris generation, how clouds of debris evolve with respect to time, and the ramifications that they pose.
 \singlespace
 \newpage
 
@@ -584,7 +578,6 @@ $D_{A/M}$ is the distribution function of $\chi$ as a function of $\lambda_c$, w
 	\chi &= \log_{10}(A/M)
 \end{align}
 \Gls{normal_distribution} is the normal distribution function with mean $\mu_{A/M}$ and standard deviation $\sigma_{A/M}$, where
-
 \begin{align}
 	 \mu_{A/M} &= \begin{cases} 
 		-0.3, & \lambda_c\leq -1.75 \\
@@ -685,18 +678,18 @@ As shown in the table below, the data from the various space agencies has some s
 \newpage
 \section{State Representation}
 
-Following the successful computation of the fragmentation event, we need to construct the representation of each fragment as a piece of orbital debris. There are two primary methods for representing the state of an orbital body.
+Following the successful computation of the fragmentation event, we need to construct a state representation for each piece of orbital debris. There are two primary methods for representing the state of an orbital body.
 
-The first is using \boldindex{orbital state vectors} to represent the object. Orbital state vectors consist of the Cartesian vector's position, $\vec{r}$, and velocity $\vec{v}$ along with time, t. This representation is a natural result of Newton's laws of motion and the Universal Law of Gravitation.
+The first is using \boldindex{orbital state vectors} to represent the debris. Orbital state vectors consist of the Cartesian position, $\vec{r}$, and velocity $\vec{v}$ along with time, t. Additionally, the preferred coordinate system for this representation is the \boldindex{Earth-Centered Inertial (ECI) Coordinate system}. This is a coordinate frame with the origin at the center of Earth's mass and has orbiting satellites moving relative to Earth. The orbital state vector representation is a natural result of Newton's laws of motion and the Universal Law of Gravitation.
 
-The second representation is as \boldindex{keplerian elements}, which are a result of Kepler's laws of planetary motion. These consist of the eccentricity, \emph{e}, Semimajor axis, \emph{a}, inclination, \emph{i}, longitude of the ascending node, $\Omega$, the argument of periapsis, $\omega$, and the true anomaly, $\nu$. Keplerian elements are a more abstract representation of the motion of an object, but provide significant benefits are explored in the subsequent subsections. 
+The second representation is using \boldindex{Keplerian elements}, which result from Kepler's laws of planetary motion. These consist of the eccentricity, \emph{e}, Semimajor axis, \emph{a}, inclination, \emph{i}, longitude of the ascending node, $\Omega$, the argument of periapsis, $\omega$, and the true anomaly, $\nu$. 
 
-The combination of both of these state representations is used as they each pose benefits and drawbacks for conducting a simulation.
+Both of these methods have advantages and disadvantages for modeling orbital debris, and as such, it is often convenient to switch back and forth. Keplerian elements are a more abstract representation of an object's motion but provide significant benefits for performing propagations forward in time. Orbital state vectors are often more suited to performing visualizations and give a more intuitive sense of each piece of debris's current state. Both of these representations are explored in this section, as well as their benefits and construction.
 
 \subsection{Orbital State vectors and their advantages}
 
-The Orbital State vectors utilize Newton's laws of motion and Newton's Universal Law of Gravitation to describe the motion of an object in space. 
-Newton's Universal Law of Gravitation states that $$\vec{F_{grav}} = G\frac{ m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}$$ \noindent This is the dominant force that acts on orbital objects, neglecting drag. As such application of newtons second law yields
+The orbital state vectors utilize Newton's laws of motion and Newton's universal law of gravitation to describe the motion of an object in space. 
+Newton's universal law of gravitation states that $$\vec{F}_{grav} = G\frac{ m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}$$ \noindent This is the dominant force that acts on orbital objects, neglecting drag. As such application of newtons second law yields
 \begin{align}
 	m_1 * \vec{a_1}  & = G\frac{m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}\\
 	\vec{a_i}  &= G \sum_{i \ne j}  m_j \frac{\vec{r_j} -\vec{r_i}}{\mid\vec{r_j - r_i}\mid^3} \indent\text{(More general)}
@@ -709,9 +702,9 @@ The benefits of using orbital state vectors are that they provide a natural intu
 \newpage
 \subsection{Keplerian elements and their advantages}
 
-Viewed from an inertial plane, two orbiting bodies trace distinctive trajectories, where each has a focus at the common center of mass. When switching to a non-inertial frame centered on one of the bodies, only the trajectory of the opposite body is viewable. Keplerian elements are a parameterization that describes these non-inertial trajectories (Wikibook).
+When viewed from an inertial plane, two orbiting bodies trace distinctive trajectories, where each has a focus at the common center of mass.  When switching to a non-inertial frame centered on one of the bodies, only the opposite body's trajectory is viewable. Keplerian elements are a parameterization that describes these non-inertial trajectories (Wikibook).
 
-The reference body is called the primary, and in our case will be the Earth, while the other body is the secondary. It should be noted that there is no preferred primary or secondary.
+The reference body is called the primary body, in our case this is the Earth, while the other body is the secondary body. It should be noted that there is no preferred primary or secondary body.
 
 The first step to reparameterize the motion of the orbital debris is to use the position vector, $\vec{r}$, and velocity vector, $\vec{v}$, defined in the above subsection to define the \boldindex{specific angular momentum} vector as follows
 
@@ -730,7 +723,7 @@ The \boldindex{ascending node} is the spot where the orbiting body crosses the p
 \begin{figure}[t]
 	\centering
 	\includegraphics[scale=0.35]{keplerian-elements}
-	\caption{A figure}
+	\caption{A diagram illustrating the Keplerian elements related to the orbital plane intersecting a reference plane. Data Source: Orbital elements Wikipedia page }
 \end{figure}
 
 Using the parameters typically used for specifying an ellipse, we can also describe an orbit
@@ -740,7 +733,7 @@ The \boldindex{Semi-Major Axis}, a,  is one half of the major axis. The major ax
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.35]{semi-major_and_minor_axes}
-	\caption{A figure}
+	\caption{The semi-major axis, a, along with the semi-minor axis, b, and the foci of an ellipse, $F_1$ and $F_2$. Data Source: Semi-major and semi-minor axis Wikipedia page}
 \end{figure}
 
 Using the Vis-Viva equation, the semi-major axis, a, can be defined as:
@@ -759,7 +752,7 @@ The equation for eccentricity can be expressed from the the Orbital State vector
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.45]{eccentricity}
-	\caption{A figure}
+	\caption{The relationship between the eccentricity and the resulting conic section. Data Source: https://3.bp.blogspot.com}
 \end{figure}
 
 The \boldindex{inclination}, \textit{i}, is the angle formed between the unit vector pointing in the $\hat{K}$ direction and the angular momentum vector $\vec{h}$ and can be calculated using
@@ -820,7 +813,7 @@ The evolution of the orbits and positions of fragments with respect to time is w
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.45]{debrisphases}
-	\caption{A figure}
+	\caption{The three phases of debris cloud evolution. Data Source: Letizia}
 \end{figure}
 
 
@@ -854,7 +847,7 @@ To measure the fragments' spread we will define a particle-based flux. This is a
 
 $X[:-1, :, 1] < 0$ is taking the y coordinates of all debris from the first time step to the second to last time step and checking if they are negative. It will assign a True to the negative values and a False to the positive values. Similarly, $X[1:, :, 1] > 0$ is doing the same thing but checking if the debris y coordinates are positive from the second time step to the last time step. Using a boolean array, we now have an array that contains True when a fragment has switched from negative to positive between successive time steps and a false otherwise.
 
-By using np.sum on this boolean array, we assign a 1 to true and a 0 to false and as such can count all of the fragments in a given timestep that have switched from a negative y coordinate to a positive one. Therefor, we have defined a flux for the fragments that gives information about the spread of all fragments.
+By using np.sum on this boolean array, we assign a 1 to true and a 0 to false and as such can count all of the fragments in a given timestep that have switched from a negative y coordinate to a positive one. Therefore, we have defined a flux for the fragments that gives information about the spread of all fragments.
 
 \begin{figure}[t]
 	\begin{adjustbox}{max width=1.6\linewidth,center}
@@ -910,9 +903,9 @@ A significant perturbation that causes changes in the fragments' orbits is \bold
 
 \subsubsection{Atmospheric Models}
 
-To model the effects of drag, a suitable atmospheric model must be selected. An atmospheric model tells us information about the air pressure, air density, wind speeds, e.t.c. at varying locations in the atmosphere. However, it would be cumbersome and computationally inefficient to utilize a model that contains all of this information.  To enable efficiency varying models of drag tend to focus on a select few variables rather than creating a universal "best" model that considers all relevant factors (Vallado).
+To model the effects of drag, a suitable atmospheric model must be selected. An atmospheric model tells us information about the air pressure, air density, wind speeds, e.t.c. at varying locations in the atmosphere. However, it would be cumbersome and computationally inefficient to utilize a model that contains all of this information.  To enable efficiency varying models of drag tend to focus on a select few variables rather than creating a universal "best" model that considers all relevant factors \citep{vallado_d._2013}.
 
-Choosing a model that best fits a given use case comes down to the desired criterion for speed, accuracy, and applicability. For example the DAMAGE orbital debris model assumes a rotating, oblate atmosphere with density and density scale height values taken from the 1972 COSPAR International Reference Atmosphere (CIRA) (Hugh G. Lewis, 2012).  A detailed exploration of various atmospheric models is given by (Gaposchkin and Coster (1988), but for the purposes of this paper, we will be focusing on a model called the \boldindex{Exponential Atmospheric Model}. This is a  a static model that assumes a spherically symmetric distribution of particles, where the density decays exponentially with increasing altitude. (Vallado)
+Choosing a model that best fits a given use case comes down to the desired criterion for speed, accuracy, and applicability. For example the DAMAGE orbital debris model assumes a rotating, oblate atmosphere with density and density scale height values taken from the 1972 COSPAR International Reference Atmosphere (CIRA) (Hugh G. Lewis, 2012).  A detailed exploration of various atmospheric models is given by (Gaposchkin and Coster (1988), but for the purposes of this paper, we will be focusing on a model called the \boldindex{Exponential Atmospheric Model}. This is a  a static model that assumes a spherically symmetric distribution of particles, where the density decays exponentially with increasing altitude \citep{vallado_d._2013}.
 
 In the Exponential Atmospheric Model the density $\rho$ varies according to
 \begin{equation}
@@ -920,7 +913,7 @@ In the Exponential Atmospheric Model the density $\rho$ varies according to
 \end{equation}
 where $\rho_0$ is a reference density that is used with $h_0$,  a reference altitude,  $h_{ellp}$ the actual altitude above the ellipsoid, and $H$ which is a scale height.
 
-The reference density and reference altitude are tabulated values that come from sources such as the U.S. Standard Atmosphere and CIRA. The scale height is a value used to ensure continuity throughout $\rho$. The combination of the U.S. Standard Model and CIRA will yield moderately accurate results for general purposes and as such will utilized in for computing the force of drag. (Valado referencing Wertz 1978;820).
+The reference density and reference altitude are tabulated values that come from sources such as the U.S. Standard Atmosphere and CIRA. The scale height is a value used to ensure continuity throughout $\rho$. The combination of the U.S. Standard Model and CIRA will yield moderately accurate results for general purposes and as such will utilized in for computing the force of drag \citep{vallado_d._2013}. \footnote{The atmospheric model implementation, including the tabulated values that are used, are included in the appendix of this paper}
 
 \begin{figure}[H]
 	\centering     %%% not \center
@@ -929,7 +922,7 @@ The reference density and reference altitude are tabulated values that come from
 	\caption{The atmospheric density of Earth as a function of altitude according to the Exponential Atmospheric Model}
 \end{figure}
 
-"The details of the atmospheric model implementation, including the tabulated values that are used, are included in the appendix of this paper. " ** ADD AS FOOT NOTE   The air density, $\rho$, as a function of altitude is shown above. Note that the y axis is given as a log scale due to the rapidly increasing density of air at high altitudes as the distance to Earth shrinks.
+The air density, $\rho$, as a function of altitude is shown above. Note that the y axis is given as a log scale due to the rapidly increasing density of air at high altitudes as the distance to Earth shrinks.
 
 \subsubsection{Effects of Drag on Orbital Elements}
 
@@ -1015,9 +1008,8 @@ where:\begin{align}
 		-\frac{18}{256}  & 0 & -\frac{19}{256}  & 0 &\frac{2}{256} &0 &\frac{3}{256} \\
 	\end{bmatrix}
 \end{align}
-The vast majority of the debris fall in the low eccentricity range, as such only the circular and low eccentricity expressions are implemented. The high eccentricity range has a similar formulation provided by (Stefan Frey) in ().
+The vast majority of the debris fall in the low eccentricity range, as such only the circular and low eccentricity expressions are implemented. The high eccentricity range has a similar formulation provided by \cite{frey_extension_2019}. \footnote{The implementation of drag, and other perturbations is contained in the \hyperref[subsec:propagation]{appendix}}
 
-The implementation of drag, and other perturbations is contained in the \hyperref[subsec:propagation]{appendix}
 
 \subsubsection{Nodal Precession}
 
@@ -1042,8 +1034,9 @@ where $p = a(1 - e^2)$ is the semi-latus rectum of the orbit, $\bar{n}=\sqrt{\ma
 
 The J2 term is a result of an infinite series equation that describes the perturbation effects of a rotating planetary body on the gravity of a planet. Each term of the series is denoted as $J_n$, however the $J_2$ term is more than 1000 times larger than the other terms (Ai soln. j2 perturbation). This is why the J2 effect is considered a relevant orbital perturbation for the evolution of an orbital debris cloud. For context, Earth's  $J_2$ term has a value of $0.108 \times 10^{-2}$ whereas its $J_3$ term has a value of $0.253 \times 10^{-5}$.
 
+\section{Analysis}
 
-
+tests
 
 
 

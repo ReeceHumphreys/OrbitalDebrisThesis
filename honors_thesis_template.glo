@@ -1,4 +1,3 @@
-\glossaryentry{\ensuremath {\Delta v}?\glossentry{rel_velocity}|setentrycounter[]{page}\glsnumberformat}{iii}
 \glossaryentry{\ensuremath {\Delta v}?\glossentry{rel_velocity}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{\ensuremath {\Phi }?\glossentry{flux}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{\ensuremath {\mu }?\glossentry{mean}|setentrycounter[]{page}\glsnumberformat}{vi}
@@ -22,13 +21,13 @@
 \glossaryentry{\ensuremath {M_t}?\glossentry{target_mass}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{\ensuremath {\mathcal {N}}?\glossentry{normal_distribution}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{vi}
-\glossaryentry{\ensuremath {L_c}?\glossentry{L_c}|setentrycounter[]{page}\glsnumberformat}{7}
-\glossaryentry{\ensuremath {M_e}?\glossentry{reference_mass}|setentrycounter[]{page}\glsnumberformat}{8}
-\glossaryentry{\ensuremath {M_t}?\glossentry{target_mass}|setentrycounter[]{page}\glsnumberformat}{8}
-\glossaryentry{\ensuremath {M_p}?\glossentry{prjectile_mass}|setentrycounter[]{page}\glsnumberformat}{8}
-\glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{8}
-\glossaryentry{\ensuremath {\mathcal {N}}?\glossentry{normal_distribution}|setentrycounter[]{page}\glsnumberformat}{10}
-\glossaryentry{\ensuremath {L_c}?\glossentry{L_c}|setentrycounter[]{page}\glsnumberformat}{10}
-\glossaryentry{\ensuremath {\Delta v}?\glossentry{rel_velocity}|setentrycounter[]{page}\glsnumberformat}{12}
-\glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{13}
-\glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{\ensuremath {L_c}?\glossentry{L_c}|setentrycounter[]{page}\glsnumberformat}{8}
+\glossaryentry{\ensuremath {M_e}?\glossentry{reference_mass}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{\ensuremath {M_t}?\glossentry{target_mass}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{\ensuremath {M_p}?\glossentry{prjectile_mass}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{9}
+\glossaryentry{\ensuremath {\mathcal {N}}?\glossentry{normal_distribution}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{\ensuremath {L_c}?\glossentry{L_c}|setentrycounter[]{page}\glsnumberformat}{11}
+\glossaryentry{\ensuremath {\Delta v}?\glossentry{rel_velocity}|setentrycounter[]{page}\glsnumberformat}{13}
+\glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{14}
+\glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{14}
