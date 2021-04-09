@@ -2,11 +2,7 @@
 
   \item argument of periapsis, 23
   \item ascending node, 20
-  \item atmospheric drag, 30
-
-  \indexspace
-
-  \item Binomial distribution, 29
+  \item atmospheric drag, 31
 
   \indexspace
 
@@ -16,7 +12,7 @@
 
   \item Earth-Centered Inertial (ECI) Coordinate system, 17
   \item Eccentric anomaly, 23
-  \item Exponential Atmospheric Model, 31
+  \item Exponential Atmospheric Model, 32
 
   \indexspace
 
@@ -28,6 +24,8 @@
 
   \indexspace
 
+  \item Kepler orbits, 27
+  \item Kepler's Equation, 27
   \item Keplerian elements, 17
   \item Keplers equation, 24
 
@@ -42,8 +40,8 @@
 
   \indexspace
 
-  \item Nodal Precession, 36
-  \item Nodal precession, 36
+  \item Nodal Precession, 37
+  \item Nodal precession, 37
 
   \indexspace
 
@@ -59,5 +57,6 @@
   \indexspace
 
   \item true anomaly, 23
+  \item Two-lines elements, 39
 
 \end{theindex}

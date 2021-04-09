@@ -16,7 +16,7 @@
 \usepackage{courier}
 \usepackage{mathtools}
 \usepackage[toc,page]{appendix}
-\usepackage[round]{natbib}
+\usepackage[square, numbers]{natbib}
 \graphicspath{ {figures/} }
 \usepackage{array}
 
@@ -349,7 +349,7 @@
 % Title pages.
 
 \newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}}
-\newcommand{\mytitle}{[title]}
+\newcommand{\mytitle}{Orbital Debris Cloud Evolution: An analysis of fragmentation events in low earth orbit}
 \newcommand{\myauthor}{Reece Humphreys}
 \newcommand{\myadvisor}{Dr. Yaouen Fily}
 
@@ -439,8 +439,10 @@ Date
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{@{}l@{\hspace{3ex}}l}
 	Author: & \myauthor \\
-	Title: & \mytitle \\
-	Institution: & Harriet L. Wilkes Honors College, Florida Atlantic University \\
+	Title: & Orbital Debris Cloud Evolution: An analysis \\
+	 & of fragmentation events in low Earth orbit \\
+	Institution: & Harriet L. Wilkes Honors College, Florida Atlantic  \\
+	& University \\
 	Thesis Advisor: & \myadvisor \\
 	Degree: & Bachelor of Science in Liberal Arts and Sciences \\
 	Concentration: & Mathematics \\
@@ -807,94 +809,88 @@ As such, the position of a piece of debris in orbit can be found at any time in 
 \newpage
 \section{Debris cloud evolution}
 
-The evolution of the orbits and positions of fragments with respect to time is what will be referred to as the debris cloud evolution. This evolution goes through a few distinctive phases, notably the ellipsoid,  ring formation,  toroid, and band formation. These different phases occur due to certain orbital effects being more predominant than others. For example, the ellipsoid and ring formation occurs due to the variations in velocity that each fragment has as a result of the fragmentation event. Whereas the toroid and band formation steps are heavily influenced by atmospheric drag, effects from the Earth's oblateness, and solar radiation. These different phases will be analyzed in-depth in the following subsections.
+Debris cloud evolution is the collective change in the orbits and positions of fragments with respect to time. This evolution goes through a few distinctive phases, notably the ellipsoid,  ring formation,  toroid, and band formation, illustrated in figure ~\ref{fig:debrisphases}. The primary differences in each phase are a result of how long each phase lasts. For example, the ellipsoid and ring formation occurs within a few days; as such only the force of gravity  will have a significant effect during this period.  However, the toroid and band formation phases take over a year. As a result, additional forces such as drag will have more prominent effects due to the increased duration. Different methodologies need to be applied for each phase to ensure fast and accurate computations. These different phases, the forces being considered, and the methodologies used will be analyzed in-depth in the following subsections.
 \vspace{\baselineskip}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.45]{debrisphases}
 	\caption{The three phases of debris cloud evolution. Data Source: Letizia}
+	\label{fig:debrisphases}
 \end{figure}
 
 
-\subsection{Initial states and Ellipsoid Formation}
+\subsection{Ellipsoid and Ring Phase}
 
-At the time of the fragmentation event, all debris fragments have the same position. However, as seen in section 2, the velocities of each of the fragments are different and point in a random direction. This in turn leads to each fragment having a different amount of energy, and as such, a different orbit. 
+At the time of the fragmentation event, all debris fragments have the same position. However, as seen in section 2, each of the fragments' velocities is different and point in random directions. These differences in velocities cause the debris to spread out as their orbits progress until uniformity is reached. The ellipsoid formation is a minor phase that occurs within a few hours, characterized by the debris starting to spread out. The ellipsoid phase's importance is that the fragments of debris have a relatively high density and, as such, can have a high probability of colliding with other satellites. Since this research is not concerned with collision probabilities, no analysis will be performed on the ellipsoid phase. A visualization that was created from the python implementation of this phase is provided in figure ~\ref{fig:ellipsoid}.
 
-During this phase, the precise location of each fragment is needed. As such,  all of the Keplerian elements will need to be known for each fragment. Additionally, this phase occurs within the first few orbits of the fragments, when perturbations have negligible effects. Therefore such factors do not need to be considered.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.35]{ellisoid_phase}
+	\caption{To DO }
+	\label{fig:ellipsoid}
+\end{figure}
 
-Due to neglecting inter-fragment gravitational interactions and perturbation the characteristics of motion throughout this phase are driven by two-body dynamics between an individual fragment and the Earth.
+The ring phase occurs once the fragments have reached uniformity, which takes around two to three days depending on the fragmentation event,  and is a continuation of the ellipsoid phase. As such, the methodology and assumptions for both of these phases are the same.
 
-\subsection{Ring formation}
+Since these phases occur on a short time span and inter-fragment gravitational interactions are negligible, two-body dynamics drive the equations of motion throughout this phase between an individual fragment and the Earth. As such, propagating the fragments during these phases is a special case of the two-body problem. While the two-body problem is well characterized, it is not computationally efficient enough to perform long duration and accurate propagations. As such, we reframe the problem as propagating Kepler orbits.
 
-Following the Ellipsoid formation, the fragments will continue to spread out until they are approximately uniformly distributed in a ring shape. This is a natural consequence of the slightly differing velocities each fragment has. 
+\boldindex{Kepler orbits} are orbits in which no perturbations of inter gravitational interactions are considered, a special case of the two-body problem. Framing the problem this way lends itself naturally to using Keplerian elements. For Kepler orbits, only the orbits' anomalies will be changing over time which reduces the number of computations that need to be performed and aids in maintaining accuracy.
 
-To determine when the ring formation has occurred, we must shift to a statistical view point.
+This benefit is a result of \boldindex{Kepler's Equation} which is expressed in terms of the mean anomaly as
+\begin{equation}
+	M = E - e\sin(E) = \sqrt{\frac{\mu}{a^3}}\left(t - t_0\right)
+\end{equation}
+where $E$ is the eccentric anomaly, $e$ is the eccentricity, $\mu$ is the standrad gravitational parameter, $a$ is the semi-major axis, $t$ is some time in the future, $t_0$ is the current time. Since we have an analytic expression for the mean anomaly, we do not need to use any integration methods for propagating Kepler orbits forward in time which results in the aforementioned computational efficiencies.
 
-Given the fragments begin at a shared location, the first step is to establish how spread out they become across time.
+The next step is to find the corresponding eccentric and true anomalies from the propagated mean anomaly. The eccentric anomaly is found from the Kepler equation; however, there is no closed-form solution given the mean anomaly. As such, numerical integration must be used to find the eccentric anomaly. The processes for performing the integration of Kepler's equation are the subject of many other research papers due to the importance it plays in orbit propagation. It is not included in this paper for conciseness, but a python implementation of one of the methods can be found in the appendix in section (TO DO INSERT REFERENCE TO APPENDIX SECTION HERE)(Maybe talk about the new methods in this area that do not require using integration).
 
-To measure the fragments' spread we will define a particle-based flux. This is accomplished by creating an xz plane in the equatorial coordinate system and detecting when particles have switched from one side of the plane to the other. Plotting the results will show peaks when the fragments pass through, which will converge to some value as the fragments become uniformly spread out.
+Kepler's equation has another form which enables us to convert the resulting eccentric anomaly to the true anomaly. This form is given as
+\begin{equation}
+	\nu = 2 \arctan\left(\sqrt{\frac{1+e}{1-e}}\tan\frac{E}{2}\right).
+\end{equation}
 
-\begin{code}
-	\captionof{listing}{Characteristic Length Implementation} 
-	\begin{tcbpythoncode}
-		def fragmentation_flux(X):
-			return np.sum((X[:-1, :, 1] < 0) & (X[1:, :, 1] > 0), axis=1)
-		position = cartesian_states[:, 0, :, :]
-		flux = fragmentation_flux(position)
-	\end{tcbpythoncode}
-\end{code}
+Since we now have expressions for how the three anomalies will change over time for Kepler orbits, we can accurately propagate the debris until the ring formation phase is completed. However, we now need to have a method to detect once the ring formation phase is completed to switch to performing the propagation for future phases. A visualization of end result of the ring formation phase is provided in figure ~\ref{ring}.
+\begin{figure}[b!]
+	\centering
+	\includegraphics[scale=0.45]{ring_phase}
+	\caption{To DO }
+	\label{ring}
+\end{figure}
 
-$X[:-1, :, 1] < 0$ is taking the y coordinates of all debris from the first time step to the second to last time step and checking if they are negative. It will assign a True to the negative values and a False to the positive values. Similarly, $X[1:, :, 1] > 0$ is doing the same thing but checking if the debris y coordinates are positive from the second time step to the last time step. Using a boolean array, we now have an array that contains True when a fragment has switched from negative to positive between successive time steps and a false otherwise.
+\subsection{Transition to Toroid and Band phase}
 
-By using np.sum on this boolean array, we assign a 1 to true and a 0 to false and as such can count all of the fragments in a given timestep that have switched from a negative y coordinate to a positive one. Therefore, we have defined a flux for the fragments that gives information about the spread of all fragments.
+Detecting the end of the ring formation phase is crucial in propagating the debris cloud. When transitioning from the ring phase to the toroid and band phases, additional forces such as drag must be considered. Additionally, these new phases take a much longer amount of time to form. Both of these factors result in needing to switch to a new propagation method. As such, detecting when the ring has formed allows us to switch to this new propagation method.
 
-\begin{figure}[t]
-	\begin{adjustbox}{max width=1.6\linewidth,center}
+To asses whether the system has formed a roughly uniform ring we monitor the number of debris passing through a certain region of space as a function of time. A visualization of how this process works is provided in figure ~\ref{flux_diagrams}.
+
+\begin{figure}[h]
+	\begin{adjustbox}{max width=1\linewidth,center}
 		\centering     %%% not \center
-		\subfigure[]{\label{fig:a}\includegraphics[width=0.8\textwidth]{Flux_v_Time}}
-		\subfigure[]{\label{fig:b}\includegraphics[width=0.8\textwidth]{Convergence_Ratio_v_Time}}
+		\subfigure[]{\label{fig:a}\includegraphics[width=0.5\textwidth]{Flux_diagram1}}
+		\subfigure[]{\label{fig:b}\includegraphics[width=0.5\textwidth]{Flux_diagram2}}
 	\end{adjustbox}
-	\caption{The flux of the fragments as a function of time \textbf{(a)} and the convergence ratio of the flux as a function of time \textbf{(b)} }
+	\caption{Measuring the flux at the time of the ellipsoid phase \textbf{(a)} and measuring the flux near the completion of the ring phase \textbf{(b)} }
+	\label{flux_diagrams}
 \end{figure}
+
+More specifically, to measure the fragments' spread we will define a particle-based flux. This is accomplished by creating an xz plane in the equatorial coordinate system and detecting when particles have switched from one side of the plane to the other. Plotting the results will show peaks when the fragments pass through, which will converge to some value as the fragments become uniformly spread out.
 
 Plotting the flux over time shows these expected peaks and what seems to be it converging to some value. However, the data is quite noisy and we need a concrete method to determine when the fragments will be distributed uniformly. As such, we need to develop a method to test for when the data has converged.
+A property that is true of all uniform distributions is that the variance approximately equals the mean. As such, we can define a converge ratio using the variance and mean of the flux. When the convergence ratio is within some defined tolerance we can and test for when the flux has become uniform and as such the conclusion of the ring formation phase. It should be noted that the ring never reaches true uniformity which results in osculating flux. An example of how the flux and convergence ratio evolves with time is shown in figure ~\ref{flux_plots}.
 
- \subsubsection{Convergence}
- 
- Using methods from statistical mechanics, we can derive a method for determining when the flux of the fragments approximately converges to some steady value.
- The first assumption is that by neglecting inter gravitational forces, the motion of an individual fragment is independent of the motion of all other fragments.  (ANOTHER ASSUMPTION HERE)
- 
- If we assume that each fragment crossing the plane is uniformally distributed in time, picking the last N points that will pass in some amount of time greater than 1 period. Call the total fragments crossing during that time M.
- 
- The probability a fragment crossing at time $t_i$ is $\frac{1}{N}$. Thus the probability of $m$ fragments crossing between time $t_i$ and $t_{i+1}$ is defined as follows
- 
- \begin{equation}
- 	P = C^m_N * (\frac{1}{N})^m * (\frac{N - 1}{N})^{N-m}
- \end{equation}
+\begin{figure}[t]
+	\begin{adjustbox}{max width=1\linewidth,center}
+		\centering     %%% not \center
+		\subfigure[]{\label{fig:a}\includegraphics[width=0.5\textwidth]{Flux_v_Time}}
+		\subfigure[]{\label{fig:b}\includegraphics[width=0.5\textwidth]{Convergence_Ratio_v_Time}}
+	\end{adjustbox}
+	\caption{The flux of the fragments as a function of time \textbf{(a)} and the convergence ratio of the flux as a function of time \textbf{(b)} }
+	\label{flux_plots}
+\end{figure}
 
-\noindent Using this expression, we can define the probability of $n$ fragments crossing as:
-\begin{equation}
-	P_n = C^n_N * P^n * (1 - P)^N
-\end{equation}
-Notice that this is a \boldindex{Binomial distribution} which makes sense given the assumptions that were made about the distribution of the fragments.
 
-From this, we can compute the mean number of fragments crossing, $n$, as
-\begin{equation}
-	<n> = \sum_{n=0}^{N} n P_n = P * N = \frac{N}{M}
-\end{equation}
-Similarly, we can compute the variance as
-\begin{equation}
-	<(n-<n>)^2> = \sum_{n=0}^{N}(n - \frac{N}{m})^2 * P_n = P * N (1 - P)
-\end{equation}
-
-With $N, M$ being much larger than 1 we get a variation approximately equal to the mean.
-
-We now have enough information to define a convergence ratio. If we divide the variation by the mean over a given interval, it will approximately equal 1 if the number of fragments crossing the plane during that interval is uniform.
-
-WRITE ABOUT PINCH POINT
-
-\subsection{Toroid}
+\subsection{Toroid and Band phase}
 For the evolution of the cloud to continue, we now must consider orbital perturbations that will cause the orbits to change over time. Beginning to consider perturbations such as drag and J2 will enable the ring shape of the cloud to evolve towards the Toroid band. 
 
 \subsubsection{Aerodynamic Drag}
@@ -915,9 +911,9 @@ where $\rho_0$ is a reference density that is used with $h_0$,  a reference alti
 
 The reference density and reference altitude are tabulated values that come from sources such as the U.S. Standard Atmosphere and CIRA. The scale height is a value used to ensure continuity throughout $\rho$. The combination of the U.S. Standard Model and CIRA will yield moderately accurate results for general purposes and as such will utilized in for computing the force of drag \citep{vallado_d._2013}. \footnote{The atmospheric model implementation, including the tabulated values that are used, are included in the appendix of this paper}
 
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering     %%% not \center
-	\vspace*{-1.5in}
+	%\vspace*{-1.5in}
 	\includegraphics[width=0.7\textwidth]{Atmospheric_Density_v_Altitude}
 	\caption{The atmospheric density of Earth as a function of altitude according to the Exponential Atmospheric Model}
 \end{figure}
@@ -1036,7 +1032,22 @@ The J2 term is a result of an infinite series equation that describes the pertur
 
 \section{Analysis}
 
-tests
+Now that the critical components for debris cloud evolution are established, we can use the developed python implementation to gain insights into orbital debris's evolution. The first step for this is choosing a suitable scenario for the fragmentation event. Once the scenario is selected, the propagation methods defined in section 4 can be applied to study the debris throughout the various phases. This includes analyzing the estimated time for the fragments to deorbit and the fragments' spread over time.
+
+\subsection{Data Source}
+Selecting a realistic scenario to analyze can be difficult without prior knowledge of typical satellite orbits. As such, it is beneficial to perform analysis on existing satellites in low Earth orbit. This can be accomplished by utilizing a database of \boldindex{Two-lines elements} (TLE's), which are a standardized way of describing information about a satellite's orbit.
+
+The python implementation created for this researches utilizes a TLE database maintained by the website 'CelesTrak' to make all cataloged objects in orbit available for fragmentation events \footnote{Additional information about TLE's and CelesTrak can be found on their \href{URL}{https://www.celestrak.com/NORAD/elements/}}.
+
+The analysis conducted in the following subsections is performed on two different satellites. The first is a satellite called OXP 1, which has an altitude of approximately 750 km and a 25-degree inclination. This is in a higher region of low Earth orbit and will allow us to analyze long-term changes on the debris cloud.
+
+The second satellite is a Starlink satellite produced by SpaceX. This satellite is at a much lower altitude, around (INSERT) km, and is a member of a satellite mega constellation currently being constructed with the goal of providing global internet coverage. It was selected as part of this analysis due to the increasing number of companies expressing interest in low Earth orbit mega-constellations. Additionally, the Starlink mega-constellation is quickly grown to having over one thousand satellites in orbit, with the end goal being 30,000 (ADD SOURCE). As such, it is relevant to study the debris cloud that would be produced in the case of a fragmentation event.
+
+
+
+\subsection{Decay Time}
+
+\subsection{Spread}
 
 
 
@@ -1060,29 +1071,60 @@ tests
 
 \newpage
 \begin{appendices}
-%	Write a description of what each section of the appendix covers
-%	\section{Code}
-%	
-%	\subsection{Breakup Model}
-%	\label{subsec:breakup}
-%	\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
-%	{code/OrbitalDebris/generate_debris.py}
-%	
-%	\subsection{Coordinate Transforms}
-%	\label{subsec:transform}
-%	\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
-%	{code/OrbitalDebris/CoordTransforms.py}
-%	
-%	\subsection{Orbit Propagation}
-%	\label{subsec:propagation}
-%	\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
-%	{code/OrbitalDebris/Perturbations.py}
+Write a description of what each section of the appendix covers
+	
+\section{Flux}
+The first assumption is that by neglecting inter gravitational forces, the motion of an individual fragment is independent of the motion of all other fragments.  (ANOTHER ASSUMPTION HERE)
+	
+If we assume that each fragment crossing the plane is uniformally distributed in time, picking the last N points that will pass in some amount of time greater than 1 period. Call the total fragments crossing during that time M.
+	
+The probability a fragment crossing at time $t_i$ is $\frac{1}{N}$. Thus the probability of $m$ fragments crossing between time $t_i$ and $t_{i+1}$ is defined as follows
+	
+\begin{equation}
+	P = C^m_N * (\frac{1}{N})^m * (\frac{N - 1}{N})^{N-m}
+\end{equation}
+	
+\noindent Using this expression, we can define the probability of $n$ fragments crossing as:
+\begin{equation}
+	P_n = C^n_N * P^n * (1 - P)^N
+\end{equation}
+Notice that this is a \boldindex{Binomial distribution} which makes sense given the assumptions that were made about the distribution of the fragments.
 
+From this, we can compute the mean number of fragments crossing, $n$, as
+\begin{equation}
+	<n> = \sum_{n=0}^{N} n P_n = P * N = \frac{N}{M}
+\end{equation}
+Similarly, we can compute the variance as
+\begin{equation}
+	<(n-<n>)^2> = \sum_{n=0}^{N}(n - \frac{N}{m})^2 * P_n = P * N (1 - P)
+\end{equation}
+
+With $N, M$ being much larger than 1 we get a variation approximately equal to the mean.
+
+We now have enough information to define a convergence ratio. If we divide the variation by the mean over a given interval, it will approximately equal 1 if the number of fragments crossing the plane during that interval is uniform.
 	
-	%\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]
-	%{code/OrbitalDebris/Perturbations.py}
-	
-	
+\section{Code}
+
+\subsection{Breakup Model}
+\label{subsec:breakup}
+\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
+{code/OrbitalDebris/generate_debris.py}
+
+\subsection{Coordinate Transforms}
+\label{subsec:transform}
+\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
+{code/OrbitalDebris/CoordTransforms.py}
+
+\subsection{Orbit Propagation}
+\label{subsec:propagation}
+\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
+{code/OrbitalDebris/Perturbations.py}
+
+
+\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]
+{code/OrbitalDebris/Perturbations.py}
+
+
 
 	
 	
