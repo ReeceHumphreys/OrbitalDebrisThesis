@@ -1,26 +1,26 @@
-\glossaryentry{\ensuremath {\Delta v}?\glossentry{rel_velocity}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {\Phi }?\glossentry{flux}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {\mu }?\glossentry{mean}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {\mu _E}?\glossentry{grav_param_E}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {\nu }?\glossentry{true_anomaly}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {\Omega }?\glossentry{raan}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {\omega }?\glossentry{argp}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {\rho }?\glossentry{density}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {A}?\glossentry{area}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {a}?\glossentry{semi_major_axis}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {e}?\glossentry{eccentricity}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {H}?\glossentry{scale_height}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {h}?\glossentry{altitude}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {i}?\glossentry{inclination}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {I_k}?\glossentry{bessel}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {J_2}?\glossentry{J2}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {L_c}?\glossentry{L_c}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {M}?\glossentry{mass}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {M_e}?\glossentry{reference_mass}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {M_p}?\glossentry{prjectile_mass}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {M_t}?\glossentry{target_mass}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {\mathcal {N}}?\glossentry{normal_distribution}|setentrycounter[]{page}\glsnumberformat}{vii}
-\glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{vii}
+\glossaryentry{\ensuremath {\Delta v}?\glossentry{rel_velocity}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {\Phi }?\glossentry{flux}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {\mu }?\glossentry{mean}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {\mu _E}?\glossentry{grav_param_E}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {\nu }?\glossentry{true_anomaly}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {\Omega }?\glossentry{raan}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {\omega }?\glossentry{argp}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {\rho }?\glossentry{density}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {A}?\glossentry{area}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {a}?\glossentry{semi_major_axis}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {e}?\glossentry{eccentricity}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {H}?\glossentry{scale_height}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {h}?\glossentry{altitude}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {i}?\glossentry{inclination}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {I_k}?\glossentry{bessel}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {J_2}?\glossentry{J2}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {L_c}?\glossentry{L_c}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {M}?\glossentry{mass}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {M_e}?\glossentry{reference_mass}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {M_p}?\glossentry{prjectile_mass}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {M_t}?\glossentry{target_mass}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {\mathcal {N}}?\glossentry{normal_distribution}|setentrycounter[]{page}\glsnumberformat}{vi}
+\glossaryentry{\ensuremath {v_c}?\glossentry{impact_vel}|setentrycounter[]{page}\glsnumberformat}{vi}
 \glossaryentry{\ensuremath {L_c}?\glossentry{L_c}|setentrycounter[]{page}\glsnumberformat}{8}
 \glossaryentry{\ensuremath {M_e}?\glossentry{reference_mass}|setentrycounter[]{page}\glsnumberformat}{9}
 \glossaryentry{\ensuremath {M_t}?\glossentry{target_mass}|setentrycounter[]{page}\glsnumberformat}{9}

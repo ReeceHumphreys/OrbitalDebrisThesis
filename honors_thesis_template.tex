@@ -1076,57 +1076,50 @@ The second satellite is a Starlink satellite produced by SpaceX. This satellite 
 Write a description of what each section of the appendix covers
 	
 \section{Flux}
-The first assumption is that by neglecting inter gravitational forces, the motion of an individual fragment is independent of the motion of all other fragments.  (ANOTHER ASSUMPTION HERE)
+
+Let's pick a time interval T. Let's call N the number of debris pieces that cross the cross section (green plane in Figure xxx). Let's divide the time interval into M subinterval of length T/M.
+
+What we measure in the simulation is the number debris crossing the cross section during each subinterval. What we're interested in predicting here is the statistics of those numbers when the positions of the debris along their orbits are distributed uniformly and independently from each other.
+
+Each debris has a probability 1/M of crossing during a specific subinterval. The probability of exactly n debris crossing during a specific subinterval obeys a binomial distribution:
+
+$$P_n = C_N^n \left(\frac{1}{M}\right)^n\left(1-\frac{1}{M}\right)^{N-n} . $$
+
+Expectedly, the average number of debris crossing during a single subinterval is the number of debris crossing during the full interval (T) divided by the number of subintervals:
+
+$$\left\langle P_n \right\rangle = \sum_0^N n P_n = \frac{N}{M} .$$
+
+The variance is:
+
+%$$\left\langle \left(P_n-\frac{N}{M}\right)^2 \right\rangle = ... = \frac{N}{M}\left(1-\frac{N}{M}\right) . $$
+$$\left\langle \left(P_n-\langle P_n\rangle \right)^2 \right\rangle = ... = \frac{N}{M}\left(1-\frac{N}{M}\right) . $$
+
+Therefore, if the debris ring is fully randomized and the average number of debris crossing per time step is $\phi$, we should expect the actual measurement to fluctate through time with a variance $\phi(1-\phi)$.
+
+This in turn provides a criterion to assess whether the ring is fully randomized. Initially, when the debris are concentrated in a tight cluster, the variance is much higher. It then decreases gradually as the ring randomizes. When it becomes of order $\phi(1-\phi)$, we declare the ring randomized and move on to the band formation phase.
 	
-If we assume that each fragment crossing the plane is uniformally distributed in time, picking the last N points that will pass in some amount of time greater than 1 period. Call the total fragments crossing during that time M.
-	
-The probability a fragment crossing at time $t_i$ is $\frac{1}{N}$. Thus the probability of $m$ fragments crossing between time $t_i$ and $t_{i+1}$ is defined as follows
-	
-\begin{equation}
-	P = C^m_N * (\frac{1}{N})^m * (\frac{N - 1}{N})^{N-m}
-\end{equation}
-	
-\noindent Using this expression, we can define the probability of $n$ fragments crossing as:
-\begin{equation}
-	P_n = C^n_N * P^n * (1 - P)^N
-\end{equation}
-Notice that this is a \boldindex{Binomial distribution} which makes sense given the assumptions that were made about the distribution of the fragments.
-
-From this, we can compute the mean number of fragments crossing, $n$, as
-\begin{equation}
-	<n> = \sum_{n=0}^{N} n P_n = P * N = \frac{N}{M}
-\end{equation}
-Similarly, we can compute the variance as
-\begin{equation}
-	<(n-<n>)^2> = \sum_{n=0}^{N}(n - \frac{N}{m})^2 * P_n = P * N (1 - P)
-\end{equation}
-
-With $N, M$ being much larger than 1 we get a variation approximately equal to the mean.
-
-We now have enough information to define a convergence ratio. If we divide the variation by the mean over a given interval, it will approximately equal 1 if the number of fragments crossing the plane during that interval is uniform.
-	
-\section{Code}
-
-\subsection{Breakup Model}
-\label{subsec:breakup}
-\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
-{code/OrbitalDebris/generate_debris.py}
-
-\subsection{Coordinate Transforms}
-\label{subsec:transform}
-\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
-{code/OrbitalDebris/CoordTransforms.py}
-
-\subsection{Orbit Propagation}
-\label{subsec:propagation}
-\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
-{code/OrbitalDebris/Perturbations.py}
-
-
-\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]
-{code/OrbitalDebris/Perturbations.py}
-
-	
+%\section{Code}
+%
+%\subsection{Breakup Model}
+%\label{subsec:breakup}
+%\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
+%{code/OrbitalDebris/generate_debris.py}
+%
+%\subsection{Coordinate Transforms}
+%\label{subsec:transform}
+%\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
+%{code/OrbitalDebris/CoordTransforms.py}
+%
+%\subsection{Orbit Propagation}
+%\label{subsec:propagation}
+%\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
+%{code/OrbitalDebris/Perturbations.py}
+%
+%
+%\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]
+%{code/OrbitalDebris/Perturbations.py}
+%
+%	
 	
 \end{appendices}
 
