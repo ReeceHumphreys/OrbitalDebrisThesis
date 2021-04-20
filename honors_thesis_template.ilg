@@ -1,6 +1,6 @@
-This is makeindex, version 2.15 [TeX Live 2019] (kpathsea + Thai support).
-Scanning input file honors_thesis_template.idx....done (25 entries accepted, 0 rejected).
-Sorting entries....done (130 comparisons).
-Generating output file honors_thesis_template.ind....done (62 lines written, 0 warnings).
+This is makeindex, version 2.15 [TeX Live 2020] (kpathsea + Thai support).
+Scanning input file honors_thesis_template.idx....done (26 entries accepted, 0 rejected).
+Sorting entries....done (121 comparisons).
+Generating output file honors_thesis_template.ind....done (65 lines written, 0 warnings).
 Output written in honors_thesis_template.ind.
 Transcript written in honors_thesis_template.ilg.
