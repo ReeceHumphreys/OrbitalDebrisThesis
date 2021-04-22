@@ -458,7 +458,7 @@ Date
 
 \myskip
 \doublespace
-Orbital debris has quickly become one of the newest sources of pollution as a result of mankind's desire to work in, explore, and utilize space. However, unlike most types of pollution which people experience daily, this is pollution that is impossible for the average person to ever encounter. Yet they poses just as grand of a threat as the other types. Orbital debris is the remnants of orbital collisions, weapons tests, decommissioned satellites, and spent rocket stages that are passing over our heads faster than bullets and containing similar energy to hand grenades. This paper explores the existing models of orbital debris generation, how clouds of debris evolve with respect to time, and the ramifications that they pose.
+Orbital debris has quickly become one of the newest sources of pollution as a result of mankind's desire to work in, explore, and utilize space. However, compared to most types of pollution which people experience daily, it is unlikely that the average person will ever encounter space pollution. Yet it poses just as grand of a threat as the other types. Orbital debris are the remnants of orbital collisions, weapons tests, decommissioned satellites, and spent rocket stages that are passing over our heads faster than bullets and containing similar energy to hand grenades. This paper explores the existing models of orbital debris generation, how clouds of debris evolve with respect to time, and the ramifications that they pose.
 \singlespace
 \newpage
 
@@ -492,13 +492,15 @@ Orbital debris has quickly become one of the newest sources of pollution as a re
 \subsection{Motivation}
 Due to the accelerating launch cadence in the space sector, increased accessibility and resources for small teams to create cube satellites, and satellite mega constellation constructions underway, researchers have become increasingly concerned about the implications of potential orbital collisions. These worries have been compounded by the actions taken by foreign nations with regards to anti-satellite weapons which create substantial amounts of debris. In one such instance, a 2007 Chinese anti-satellite missile test was universally condemned and received statements from government officials such as the U.K. prime minister whose spokesperson stated, ``We are concerned about the impact of debris in space and we expressed that concern.'' These fragmentation events can be difficult to track due to the small size of some of the debris fragments that are generated, yet they can pose a great hazard to other satellites and crewed operations being conducted in space. Tens of millions of pieces of orbital debris currently exist within Low Earth Orbit (LEO) with an average size smaller than 1cm. While minuscule in size, these pieces of debris have an average impact velocity of 10 km/s which generates similar energy to that of an exploding hand grenade. It is, therefore, paramount to study the phenomena that arise within orbital debris clouds to gather methods for mitigating debris cloud formations. Without such a study, the future commercialization of space, the potential for humanity to become a multi-planetary species, and the benefits that the advanced satellites provide researchers will remain in jeopardy.% Reword the within orbital debris cloud section, replace in jeopardy its a bit too strong
 \subsection{Methodology}
-The first component in modeling orbital debris is to implement a breakup model which makes predictions about the outcome of an orbital collision or explosion. Breakup models use experimental data to create statistical models that predict the size, mass, speed, and number of debris pieces generated in a fragmentation event. Once these characteristics are obtained, equations of motion can be implemented that account for the significant forces acting on each debris fragment, such as drag and solar radiation, to model how the debris position and velocity will evolve over time. 
+The first component in modeling orbital debris is to implement a breakup model which makes predictions about the outcome of an orbital collision or explosion. Breakup models use experimental data to create statistical models that predict the size, mass, speed, and number of debris pieces generated in a fragmentation event. Once these characteristics are obtained, equations of motion can be implemented that account for the significant forces, such as drag, acting on each debris fragment to model how the debris position and velocity will evolve over time. 
 
-This paper implements the NASA Standard Satellite Breakup Model to simulate the orbital collisions and gather information regarding the behavior of orbital debris \citep{johnson_nasas_2001}. This was accomplished by utilizing the model to create an implementation in Python which has been made \href{https://github.com/ReeceHumphreys/OrbitalDebris}{open source on GitHub} for others wishing to build on the foundations of this research.
+This paper implements the NASA Standard Satellite Breakup Model to simulate the orbital collisions and gather information regarding the behavior of orbital debris \citep{johnson_nasas_2001}. This was accomplished by utilizing the model to create an implementation in Python, called ODAP, which has been made \href{https://github.com/ReeceHumphreys/OrbitalDebris}{open source on GitHub} for others wishing to build on the foundations of this research.
 
-Following the implementation of the breakup model, the implementation of dominant orbital perturbations is given. These are forces that act on debris to change their orbits over time and include effects such as atmospheric drag and solar radiation. The optimal way to represent these effects is through changes in orbital parameters, which is an alternate way of expressing the current state of an object rather than using euclidean coordinates $(x,y,z, v_x, v_y, v_z)$. The benefits of using orbital parameters is explored more in-depth in chapter 3.
+Following the implementation of the breakup model, the implementation of dominant orbital perturbations is given. These are forces that act on debris to change their orbits over time and include effects such as atmospheric drag and gravitational perturbations. The optimal way to represent these effects is through changes in orbital parameters, which is an alternative to expressing the current state of an object with Euclidean coordinates $(x,y,z, v_x, v_y, v_z)$. The benefits of using orbital parameters is explored more in-depth in Chapter 3.
 
-Finally, a case study showing the magnitude of orbital collisions is shown along with an analysis on the potential for the Kessler syndrome to occur given the increase in launch cadence and recent expansions into constructing satellite mega constellations.
+Once the breakup model is established, longer-term debris cloud evolution is outlined. The evolution falls into multiple distinctive phases, which are characterized by the most dominant forces. For example, the initial phase is called the ring formation phase, and the only force that needs to be considered is gravity. However, in the band formation phase, drag needs to be considered.
+
+Finally, an analysis showing the applications of ODAP is provided to demonstrate how we can gain insights into phenomenon such as the time for the debris to deorbit and how the spread of the debris occurs over time. This analysis juxtaposes two different satellites experiencing the same type of non-catastrophic collision to illustrate how the initial orbits of the satellites play a significant factor in the extent to which the debris will remain a hazard in orbit.
 
 \subsection{Roadmap}
 \textbf{Chapter 1:}  This current chapter serves as an introduction to orbital debris modeling. Additionally, it motivates why orbital debris is an important area of research. As such, it is a non-technical introduction to the topic that is recommended for anyone not familiar with orbital mechanics and the problem of orbital debris. \newline
@@ -515,15 +517,15 @@ Finally, a case study showing the magnitude of orbital collisions is shown along
 
 \subsection{The NASA Standard Satellite Breakup Model}
 
-A satellite is any artificial body placed in orbit around the earth or moon or another planet. The definition of the term is intentionally general and, as such, can be used to reference spacecraft (SC), remnants of rockets (RB), and communication devices (SAT) in orbit.  A satellite breakup model is a mathematical model used to describe the outcome of a satellite breakup due to an explosion or collision \citep{jer_chyi_liou_orbital_nodate}.  A satellite breakup model should describe the size, area-to-mass (AM) ratio, and the ejection velocity of each fragment produced in the satellite breakup \citep{johnson_nasas_2001}. The NASA Standard Satellite Breakup Model is an industry-standard breakup model developed by NASA and is used by most major space agencies such as the European Space Agency (ESA) and the Japanese Aerospace Exploration Agency (JAXA). The implementation of it was provided by Johnson et al. in 2001 \cite{johnson_nasas_2001} but was later clarified by Kristo in 2011 \citep{krisko_proper_2011}. 
+A satellite is any artificial body placed in orbit around the earth or moon or another planet. The definition of the term is intentionally general and, as such, can be used to reference spacecraft (SC), remnants of rockets (RB), and communication devices (SAT) in orbit.  A satellite breakup model is a mathematical model used to describe the outcome of a satellite breakup due to an explosion or collision \citep{jer_chyi_liou_orbital_nodate}.  A satellite breakup model should describe the size, area-to-mass (AM) ratio, and the ejection velocity of each fragment produced in the satellite breakup \citep{johnson_nasas_2001}. The NASA Standard Satellite Breakup Model is an industry-standard breakup model developed by NASA and is used by most major space agencies such as the European Space Agency (ESA) and the Japanese Aerospace Exploration Agency (JAXA). The breakup model's implementation was provided by Johnson et al. in 2001 \cite{johnson_nasas_2001} and was later clarified by Kristo in 2011 \citep{krisko_proper_2011}. 
 
-The NASA standard breakup model uses experimental observations performed both on Earth and in orbit to characterize the breakup using statistical distributions. The choice to use statistical distributions is a result of the stochastic nature of the breakup event in the sense that it would be impossible to reproduce the same circumstances each time. For example, explosions are stochastic due to the complex chemical reactions that lead to the explosion.  By using a statistical distribution and sampling from it we can more accurately represent the fragments that would be generated during a collision or explosion. In this paper, I will be focusing on how the collision fragments are generated, but it should be noted that the explosion case often involves slightly different parameters.
+The NASA standard breakup model uses experimental observations performed both on Earth and in orbit to characterize the breakup using statistical distributions. The choice to use statistical distributions is a result of the stochastic nature of the breakup event, meaning it would be impossible to reproduce the same circumstances each time. For example, explosions are stochastic due to the complex chemical reactions that lead to the explosion.  By using a statistical distribution and sampling from it we can more accurately represent the fragments that would be generated during a collision or explosion. In this paper, I will be focusing on how the collision fragments are generated, but it should be noted that the explosion case often involves slightly different parameters.
 
 \subsection{Implementing the NASA Breakup Model}
 
 \subsubsection{Characteristic Length and Number of fragments}
 
-To account for the different characteristics of each fragment of debris, the statistical distributions must be expressed as a function of some independent variable \citep{johnson_nasas_2001}. In the latest version of the NASA breakup model, this variable is called the characteristic length, denoted $L_c$, which assumes that the debris particles are spherical and have the density of aluminum for objects smaller than 1 cm with a diminishing density for larger debris \citep{johnson_nasas_2001}. By defining the distributions using characteristic length we ensure that the mass, area, and velocity of each fragment are not constant for all debris with the same characteristic length. This in turn guarantees that the stochastic nature of the breakups is reflected in our models. It should be noted that in prior versions of the NASA breakup model, the mass of each piece of debris was used as the independent variable \citep{krisko_proper_2011}. However, it was found to be more directly linked to both in-orbit and terrestrial breakup data \citep{johnson_nasas_2001}.
+To account for the different characteristics of each fragment of debris, the statistical distributions must be expressed as a function of some independent variable \citep{johnson_nasas_2001}. In the latest version of the NASA breakup model, this variable is called the characteristic length, denoted $L_c$, which assumes that the debris particles are spherical and have the density of aluminum for objects smaller than 1 cm with a diminishing density for larger debris \citep{johnson_nasas_2001}. By defining the distributions using characteristic length we ensure that the mass, area, and velocity of each fragment are not constant for all debris with the same characteristic length. This in turn guarantees that the stochastic nature of the breakups is reflected in our models. It should be noted that in prior versions of the NASA breakup model, the mass of each piece of debris was used as the independent variable \citep{krisko_proper_2011}. However, characteristic length was found to be more directly linked to both in-orbit and terrestrial breakup data \citep{johnson_nasas_2001}.
 
 The implementation of the characteristic length distribution can be cumbersome to follow. As such, a flow chart illustrating the steps of the algorithm is provided below. Each of the steps listed in the flow chart will be explored in further detail in the rest of this subsection.
 
@@ -533,7 +535,7 @@ The implementation of the characteristic length distribution can be cumbersome t
 	\caption{The algorithm used for producing the characteristic length distribution used in the NASA breakup model}
 \end{figure}
 
-The creation of the characteristic lengths was not given in the original specification of the NASA breakup model by Johnson \citep{johnson_nasas_2001} but was included in the corrections by Krisko in 2001. Krisko specifies that the NASA breakup model deposits fragments of $L_c$ from 1mm to over 1m in bins and that the number of fragments in each bin is determined by a power law that will be discussed later. However, Latizia's implementation for CiELO modified this to first create 100 bins that are equally spaced on a logarithmic scale between 1mm and 10 cm. In this paper, we will be following Latizia's methodology as it has the most up-to-date information about the NASA breakup model. A common theme among the prior research on the NASA breakup model is that each implementation is slightly different due to the lack of information publicly available about the original implementation specified by Johnson et al. \cite{johnson_nasas_2001}. The pieces of debris that are larger than 10cm will be handled separately to ensure that the breakup model conserves mass. Figure ~\ref{bins_sketch} below illustrates the process of using bins to determine the number of fragments of each size.
+The creation of the characteristic lengths was not given in the original specification of the NASA breakup model by Johnson \citep{johnson_nasas_2001} but was included in the corrections by Krisko in 2001. Krisko specifies that the NASA breakup model deposits fragments of $L_c$ from 1mm to over 1m in bins and that the number of fragments in each bin is determined by a power law that will be discussed later. However, Latizia's implementation for CiELO modified this to first create 100 bins that are equally spaced on a logarithmic scale between 1mm and 10 cm. In this paper, we will be following Latizia's methodology for fragments smaller than 10 cm as it has the most up-to-date information about the NASA breakup model. The pieces of debris that are larger than 10cm will be handled separately using Krisko's methodology to ensure that the breakup model conserves mass. Figure ~\ref{bins_sketch} below illustrates the process of using bins to determine the number of fragments of each size.
 
 \begin{figure}[H]
 	\centering
@@ -548,7 +550,7 @@ The number of explosive fragments of size \Gls{L_c} is governed by the following
 \begin{equation}
 	N(L_c) =6 S L_c^{-1.6}
 \end{equation}
-With S = 1, the relationship has been observed to be valid for rocket upper stages with masses in the range of 600-1000 kg \citep{johnson_nasas_2001}. However, for explosions due to other malfunctions such as battery explosions and anti-satellite tests, a value of S between 0.1 and 1 was found to fit the experimental data better \citep{krisko_proper_2011}.
+With S = 1, the relationship has been observed to be valid for rocket upper stages with masses in the range of 600-1000 kg \citep{johnson_nasas_2001}. For explosions, due to other malfunctions such as battery explosions and anti-satellite tests, a value of S between 0.1 and 1 was found to fit the experimental data better \citep{krisko_proper_2011}.
 
 In the case of a collision, a distinction must be made between catastrophic or non catastrophic. A collision is categorized as catastrophic if it causes the complete fragmentation of both the impactor and the target \citep{letizia_space_2016}. This occurs when the energy per target mass exceeds $40 J g^{-1}$ \citep{krisko_proper_2011}. The number of produced fragments for a collision is governed by
 \begin{equation}
@@ -568,7 +570,7 @@ Figure~\ref{fig:N_f_v_L_c} shows sample results from ODAP to illustrate the char
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.3, trim=0cm 0cm 0cm 10cm]{N_f_vs_L_c}
-	\caption{The characteristic length distribution produced by the python implementation of a catastrophic collision involving a rocket body with a mass of 1000kg, a projectile of mass 10kg, and an impact velocity of 10 km/s.}
+	\caption{The characteristic length distribution produced by ODAP of a catastrophic collision involving a rocket body with a mass of 1000kg, a projectile of mass 10kg, and an impact velocity of 10 km/s.}
 	\label{fig:N_f_v_L_c}
 \end{figure}
 
@@ -618,7 +620,7 @@ Figure (X)  shows a simulated A/M distribution and average cross sectional area.
 		\subfigure[]{\label{fig:a}\includegraphics[width=0.5\textwidth]{N_f_vs_A}}
 		\subfigure[]{\label{fig:b}\includegraphics[width=0.5\textwidth]{N_f_vs_M}}
 	\end{adjustbox}
-	\caption{The characteristic length distribution produced by the python implementation of a catastrophic collision involving a rocket body with a mass of 1000kg, a projectile of mass 10kg, and an impact velocity of 10 km/s. }
+	\caption{The characteristic length distribution produced by ODAP of a catastrophic collision involving a rocket body with a mass of 1000kg, a projectile of mass 10kg, and an impact velocity of 10 km/s. }
 \end{figure}
 
 \subsubsection{Change in Velocity Distribution }
@@ -644,10 +646,9 @@ It should be noted that details for efficiently handling the resampling of veloc
 \subsection{Validating the Implementation}
 Due to the niche nature of orbital debris analysis, it can generally be challenging to find any full implementation of the breakup model. Additionally, many of various space agencies around the world do not share the details of how they implemented the models. For this reason, the above implementations were largely modeled after the details given in the CiELO \cite{letizia_space_2016} which mimicks the information provided in NASA literature.
 
-To validate that ODAP's implementation of the breakup model was performed correctly, a comparison is made to existing data provided by various space agencies for a given scenario. The two scenarios are an explosion event with a rocket body that weighs 1000kg and a catastrophic collision event for a rocket body that weighs 1000kg with a projectile mass that weighs 10kg that has an impact velocity of 10km/s. The data was provided in a presentation given by Rossi et al. \citep{rossi_nasa_nodate}.
+To validate that ODAP's implementation of the breakup model was performed correctly, a comparison is made to existing data provided by various space agencies for a given scenario. The first scenario is an explosion event involving a rocket body that weighs 1000kg. The second scenario is a catastrophic collision event for involving a rocket body that weighs 1000kg and is impacted by a 10kg  projectile mass with an impact velocity of 10km/s. The data was provided in a presentation given by Rossi et al. \citep{rossi_nasa_nodate}.
 
-As shown in the table~\ref{tab:debris-comparison}, the data from the various space agencies has some significant differences, especially for the characteristic length in the $>$ 1mm range, despite implementing the same NASA breakup model. This is most likely a result of ambiguities in the original NASA breakup model specification literature, as well as differences in how various programming languages perform random sampling. The goal of ODAP is to be within the original deviations of the data.
-
+As shown in the table~\ref{tab:debris-comparison}, the data from the various space agencies has some significant differences, especially for the characteristic length in the $>$ 1mm range, despite implementing the same NASA breakup model. This is most likely a result of ambiguities in the original NASA breakup model specification literature, as well as differences in how various programming languages perform random sampling. The goal of ODAP is to be within similar ranges as the rest of the data.
  
 \begin{table}[H]
 		\noindent\makebox[\textwidth]{
@@ -673,7 +674,7 @@ As shown in the table~\ref{tab:debris-comparison}, the data from the various spa
 				\\ \hline
 			\end{tabular}
 		}
-		\caption{(Data Source: NASA Breakup Model Implementation Comparison of results, A. Rossi, 24th IADC Meeting April 2006) }
+		\caption{(NASA Breakup Model Implementation Comparison of results \cite{rossi_nasa_nodate}.}
 		\label{tab:debris-comparison}
 \end{table}
 
@@ -681,21 +682,26 @@ As shown in the table~\ref{tab:debris-comparison}, the data from the various spa
 \newpage
 \section{State Representation}
 
-Following the successful computation of the fragmentation event, we need to construct a state representation for each piece of orbital debris. There are two primary methods for representing the state of an orbital body.
+Once the fragmentation event has been simulated, we now need to describe the motion of the fragments over time. As such, we need a method of representing the fragments that will provide all of the information required for this description. An intuitive method of doing so is using \boldindex{orbital elements}, which use the position and velocity in a specific coordinate system. More specifically it uses orbital vectors in an \boldindex{Earth-Centered Inertial (ECI) Coordinate system}. This representation is illustrated in Figure~\ref{fig:state_vectors}. The orbital state vector representation is a natural result of Newton's laws of motion and the universal law of gravitation.
 
-The first is using \boldindex{orbital state vectors} to represent the debris. Orbital state vectors consist of the Cartesian position, $\vec{r}$, and velocity $\vec{v}$ along with time, $t$. Additionally, the preferred coordinate system for this representation is the \boldindex{Earth-Centered Inertial (ECI) Coordinate system}. This is a coordinate frame with the origin at the center of Earth's mass and has orbiting satellites moving relative to Earth. The orbital state vector representation is a natural result of Newton's laws of motion and the universal law of gravitation.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\linewidth]{Orbital_state_vectors}
+	\caption{A visualization of the orbital state vector approach to representing TODO ADD SOURCE }
+	\label{fig:state_vectors}
+\end{figure}
 
-The second representation is using \boldindex{Keplerian elements}, which result from Kepler's laws of planetary motion. These consist of the eccentricity, \emph{e}, Semimajor axis, \emph{a}, inclination, \emph{i}, longitude of the ascending node, $\Omega$, the argument of periapsis, $\omega$, and the true anomaly, $\nu$. 
+While this method of representing satellites is the most intuitive, it has inherent limitations due to it being a standard way of describing the motion of any object. As such, nothing about the way orbits behave is included in the representation. This leads to an alternate way of describing the motion using  \boldindex{Keplerian elements}, which result from Kepler's laws of planetary motion. These consist of the eccentricity, \emph{e}, Semimajor axis, \emph{a}, inclination, \emph{i}, longitude of the ascending node, $\Omega$, the argument of periapsis, $\omega$, and the true anomaly, $\nu$. Since this representation results from Kepler's laws, it has information about orbital mechanics built into it.
 
 Both of these methods have advantages and disadvantages for modeling orbital debris, and as such, it is often convenient to switch back and forth between them. Keplerian elements are a more abstract representation of an object's motion but provide significant benefits for performing propagations forward in time. Orbital state vectors are often more suited to performing visualizations and give a more intuitive sense of each piece of debris's current state. Both of these representations are explored in this section, as well as their benefits and construction.
 
 \subsection{Orbital State vectors and their advantages}
 
 The orbital state vectors utilize Newton's laws of motion and Newton's universal law of gravitation to describe the motion of an object in space. 
-Newton's universal law of gravitation states that $$\vec{F}_{grav} = G\frac{ m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}$$ \noindent This is the dominant force that acts on orbital objects, neglecting drag. As such, application of Newton's second law yields
+Newton's universal law of gravitation states that $$\vec{F}_{grav} = G\cfrac{ m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}$$ \noindent This is the dominant force that acts on orbital objects, neglecting drag. As such, application of Newton's second law yields
 \begin{align}
-	m_1 \vec{a_1}  & = G\frac{m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}\\
-	\vec{a_i}  &= G \sum_{i \ne j}  m_j \frac{\vec{r_j} -\vec{r_i}}{\mid\vec{r_j} - \vec{r_i}\mid^3} \indent\text{(More general)}
+	m_1 \vec{a_1}  & = G\cfrac{m_1 m_2 \vec{r}}{\mid\vec{r}\mid^3}\\
+	\vec{a_i}  &= G \sum_{i \ne j}  m_j \cfrac{\vec{r_j} -\vec{r_i}}{\mid\vec{r_j} - \vec{r_i}\mid^3} \indent\text{(More general)}
 \end{align}
 
 Therefore, the change in an object's velocity can be expressed as the sum of the contributions of gravitational attraction from all other surrounding bodies. Gravitational force depends on mass, meaning the gravitational attraction for a piece of debris to nearby debris is negligible compared to the gravitational attraction from a nearby planetary body. Thus, for computational efficiency, inter-particle interactions will be neglected.
@@ -705,9 +711,7 @@ The benefits of using orbital state vectors are that they provide a natural intu
 \newpage
 \subsection{Keplerian elements and their advantages}
 
-When viewed from an inertial plane, two orbiting bodies trace distinctive trajectories, where each has a focus at the common center of mass.  When switching to a non-inertial frame centered on one of the bodies, only the opposite body's trajectory is viewable. Keplerian elements are a parameterization that describes these non-inertial trajectories (Wikibook). *** FIX
-
-The reference body is called the primary body. In our case, this is the Earth, while the other body is called the secondary body. It should be noted that there is no preferred primary or secondary body.
+When viewed from an inertial plane, two orbiting bodies trace distinctive trajectories, where each has a focus at the common center of mass.  When switching to a non-inertial frame centered on one of the bodies, only the opposite body's trajectory is viewable. Keplerian elements are a parameterization that describes these non-inertial trajectories \citep{noauthor_astrodynamicsclassical_nodate}. The reference body is called the primary body. In our case, this is the Earth, while the other body is called the secondary body. It should be noted that there is no preferred primary or secondary body.
 
 The first step to reparameterize the motion of the orbital debris is to use the position vector, $\vec{r}$, and velocity vector, $\vec{v}$, to define the \boldindex{specific angular momentum} vector as
 \begin{equation}
@@ -723,7 +727,7 @@ The \boldindex{ascending node} is the spot where the orbiting body crosses the p
 \begin{figure}[t]
 	\centering
 	\includegraphics[scale=0.35]{keplerian-elements}
-	\caption{A diagram illustrating the Keplerian elements related to the orbital plane intersecting a reference plane. Data Source: Orbital elements Wikipedia page }
+	\caption{A diagram illustrating the Keplerian elements related to the orbital plane intersecting a reference plane \cite{noauthor_astrodynamicsclassical_nodate}}.
 \end{figure}
 
 The \boldindex{semi-major axis}, $a$,  is one half of the major axis. The major axis is a line that goes through both foci of the ellipse and the center and ends at the widest point of the perimeter.
@@ -731,12 +735,12 @@ The \boldindex{semi-major axis}, $a$,  is one half of the major axis. The major 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.35]{semi-major_and_minor_axes}
-	\caption{The semi-major axis, a, along with the semi-minor axis, b, and the foci of an ellipse, $F_1$ and $F_2$. Data Source: Semi-major and semi-minor axis Wikipedia page}
+	\caption{The semi-major axis, a, along with the semi-minor axis, b, and the foci of an ellipse, $F_1$ and $F_2$ \cite{wikipedia_2021}.}
 \end{figure}
 
 Using the vis-viva equation, the semi-major axis, $a$, can be defined as
 \begin{equation}
-a = \frac{1}{\frac{2}{\mid \vec{r} \mid} - \frac{\mid \vec{v} \mid^2 }{\mu}},
+a = \cfrac{1}{\cfrac{2}{\mid \vec{r} \mid} - \cfrac{\mid \vec{v} \mid^2 }{\mu}},
 \end{equation}
 \noindent where $\mu$ is the standard gravitational parameter of the primary body. For Earth, the value of $\mu$ is $3.986 *10^{14}\text{m}^3/\text{s}^2$.
 
@@ -744,26 +748,26 @@ The \boldindex{orbital eccentricity} is a dimensionless parameter that indicates
 
 The equation for eccentricity can be expressed from the the orbital state vectors as follows:
 \begin{equation}
-\vec{e} = \left(\frac{\mid \vec{v} \mid^2}{\mu} - \frac{1}{\mid \vec{r} \mid}\right)\vec{r} - \frac{(\vec{r} \cdot \vec{v})}{\mu}\vec{v}
+\vec{e} = \left(\cfrac{\mid \vec{v} \mid^2}{\mu} - \cfrac{1}{\mid \vec{r} \mid}\right)\vec{r} - \cfrac{(\vec{r} \cdot \vec{v})}{\mu}\vec{v}
 \end{equation}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.45]{eccentricity}
-	\caption{The relationship between the eccentricity and the resulting conic section. Data Source: https://3.bp.blogspot.com}
+	\includegraphics[width=0.5\linewidth]{eccentricity}
+	\caption{The relationship between the eccentricity and the resulting conic section \cite{noauthor_astrodynamicsclassical_nodate}.}
 \end{figure}
 
 The \boldindex{inclination}, \textit{i}, is the angle formed between the unit vector pointing in the $\hat{k}$ direction and can be calculated by
 \begin{equation}
-\textit{i} =  \arccos \frac{K_z}{\mid \vec{h} \mid},
+\textit{i} =  \arccos \cfrac{K_z}{\mid \vec{h} \mid},
 \end{equation}
 where $\vec{h}$ is the angular momentum.
 
 The \boldindex{true anomaly}, $\nu$, is used to define the position of the body in its orbit, and is the angle between the direction of the periapsis and the current position of the body.
 \begin{equation}
 	\nu [rad] = \begin{cases}
-		\arccos \frac{\vec{e} \cdot \vec{r}}{\mid \vec{e} \mid \mid \vec{r} \mid} & \text{for } \vec{r} \cdot \vec{v} \geq 0 \\
-		2\pi - \arccos \frac{\vec{e} \cdot \vec{r}}{\mid \vec{e} \mid \mid \vec{r} \mid}& \text{otherwise}	
+		\arccos \cfrac{\vec{e} \cdot \vec{r}}{\mid \vec{e} \mid \mid \vec{r} \mid} & \text{for } \vec{r} \cdot \vec{v} \geq 0 \\
+		2\pi - \arccos \cfrac{\vec{e} \cdot \vec{r}}{\mid \vec{e} \mid \mid \vec{r} \mid}& \text{otherwise}	
 	\end{cases}
 \end{equation}
 
@@ -771,22 +775,22 @@ The \boldindex{true anomaly}, $\nu$, is used to define the position of the body 
  The \boldindex{eccentric anomaly}, $E$, is also used to measure an object's position in an orbit. The eccentric anomaly is defined using the magnitude of the eccentricity vector, $e = \mid\vec{e}\mid$, and  the true anomaly as follows:
 
 \begin{equation}
-	E = 2\arctan \frac{\tan \frac{\nu}{2}}{\sqrt{\frac{1 + e}{1-e}}}
+	E = 2\arctan \cfrac{\tan \cfrac{\nu}{2}}{\sqrt{\cfrac{1 + e}{1-e}}}
 \end{equation}
 
 The \boldindex{longitude of the ascending node}, $\Omega$, is the angle between the ascending node and the unit vector $\hat{i}$
 \begin{equation}
 	\Omega [rad] = \begin{cases}
-		\arccos \frac{n_x}{\mid \vec{n} \mid} & \text{for } n_y \geq 0 \\
-		2\pi -	\arccos \frac{n_x}{\mid \vec{n} \mid} & \text{for } n_y < 0.
+		\arccos \cfrac{n_x}{\mid \vec{n} \mid} & \text{for } n_y \geq 0 \\
+		2\pi -	\arccos \cfrac{n_x}{\mid \vec{n} \mid} & \text{for } n_y < 0.
 	\end{cases}
 \end{equation}
 
 The \boldindex{argument of periapsis}, $\omega$, is the angle in the orbital plane that is between the ascending node and the periapsis and is calculated using
 \begin{equation}
 	\omega [rad] = \begin{cases}
-		\arccos \frac{\vec{n} \cdot \vec{e}}{\mid \vec{n} \mid \mid \vec{e} \mid} & \text{for } e_z \geq 0 \\
-		2\pi -\arccos \frac{\vec{n} \cdot \vec{e}}{\mid \vec{n} \mid \mid \vec{e} \mid}& \text{for } e_z < 0	
+		\arccos \cfrac{\vec{n} \cdot \vec{e}}{\mid \vec{n} \mid \mid \vec{e} \mid} & \text{for } e_z \geq 0 \\
+		2\pi -\arccos \cfrac{\vec{n} \cdot \vec{e}}{\mid \vec{n} \mid \mid \vec{e} \mid}& \text{for } e_z < 0	
 	\end{cases}
 \end{equation}
 
@@ -797,7 +801,7 @@ Finally, using \boldindex{Keplers equation} we can define the \boldindex{mean an
 
 We can now parameterize each of the debris fragments using ($e$, $a$, $i$, $\Omega$, $\omega$, $M$). This step is crucial to ensure that in the absence of orbital perturbations, only one of these parameters, the mean anomaly, will change with respect to time, $t$. This will allow for more efficient computations in the band formation phase of the simulation. Moreover, the change in mean anomaly with respect to time is analytic and expressed as
 \begin{equation}
-\frac{dM}{dt} = \sqrt{\frac{\mu}{a^3}}.
+\cfrac{dM}{dt} = \sqrt{\cfrac{\mu}{a^3}}.
 \end{equation}
 
 As such, the position of a piece of debris in orbit can be found at any time in the future without having to numerically approximate its change in position over time. Due to the vast amount of debris generated, this will provide major benefits for the band formation phase of the orbital debris cloud.
@@ -811,14 +815,14 @@ Debris cloud evolution is the collective change in the orbits and positions of f
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.45]{debrisphases}
-	\caption{The three phases of debris cloud evolution. Data Source: Letizia}
+	\caption{The three phases of debris cloud evolution \cite{letizia_space_2016}.}
 	\label{fig:debrisphases}
 \end{figure}
 
 
 \subsection{Ellipsoid and Ring Phase}
 
-At the time of the fragmentation event, all debris fragments have the same position. However, as seen in Section 2, each fragment has a different velocity in both direction and magnitude. This causes the debris to spread out and form first and ellipsoid (Figure ~\ref{fig:ellipsoid}) then a complete ring around the Earth. As the debris cloud expands, the number of other satellites it can potentially impact grows. On the other hand, the cloud also gets sparser, and the probability of any specific satellite getting hit decreases. In other words, the odds of subsequent collision spread out as well.
+At the time of the fragmentation event, all debris fragments have the same position. However, as seen in Section 2, each fragment has a different velocity in both direction and magnitude. This causes the debris to spread out, form an ellipsoid (Figure ~\ref{fig:ellipsoid}), and then move into a complete ring around the Earth. As the debris cloud expands, the number of other satellites it can potentially impact grows. On the other hand, the cloud also gets sparser, and the probability of any specific satellite getting hit decreases. In other words, the odds of subsequent collision spread out as well.
 
 \begin{figure}[h]
 	\centering
@@ -827,7 +831,7 @@ At the time of the fragmentation event, all debris fragments have the same posit
 	\label{fig:ellipsoid}
 \end{figure}
 
-It takes two to three days for the debris to form a uniform ring around the Earth. On this time scale, weak effects such as air drag and gravitational forces between debris are negligible. As a result, each debris fragment orbits around the Earth as if the other fragments did not exist. From a practical point of view, we can use standard results for the two-body gravitational problem (CITE TEXTBOOK).
+It takes two to three days for the debris to form a uniform ring around the Earth. On this time scale, weak effects such as air drag and gravitational forces between debris are negligible. As a result, each debris fragment orbits around the Earth as if the other fragments did not exist. From a practical point of view, we can use standard results for the two-body gravitational problem \citep{vallado_d._2013}.
 
 While the two-body problem is well characterized, it is not computationally efficient enough to perform long duration and accurate propagation. As such, we reframe the problem as propagating Kepler orbits.
 
@@ -835,18 +839,18 @@ While the two-body problem is well characterized, it is not computationally effi
 
 This benefit is a result of \boldindex{Kepler's Equation}, which is expressed in terms of the mean anomaly as
 \begin{equation}
-	M = E - e\sin(E) = \sqrt{\frac{\mu}{a^3}}\left(t - t_0\right),
+	M = E - e\sin(E) = \sqrt{\cfrac{\mu}{a^3}}\left(t - t_0\right),
 \end{equation}
 where $E$ is the eccentric anomaly, $e$ is the eccentricity, $\mu$ is the standrad gravitational parameter, $a$ is the semi-major axis, $t$ is some time in the future, and $t_0$ is the current time. Since we have an analytic expression for the mean anomaly, we do not need to use any integration methods for propagating Kepler orbits forward in time. This results in the aforementioned computational efficiencies.
 
-The next step is to find the corresponding eccentric and true anomalies from the propagated mean anomaly. The eccentric anomaly is found from the Kepler equation; however, there is no closed-form solution given the mean anomaly. As such, numerical integration must be used to find the eccentric anomaly. The processes for performing the integration of Kepler's equation are the subject of many other research papers due to the importance it plays in orbit propagation. It is not included in this paper for conciseness, but a python implementation of one of the methods can be found in the appendix in section (TO DO INSERT REFERENCE TO APPENDIX SECTION HERE)(Maybe talk about the new methods in this area that do not require using integration).
+The next step is to find the corresponding eccentric and true anomalies from the propagated mean anomaly. The eccentric anomaly is found from the Kepler equation; however, there is no closed-form solution given the mean anomaly. As such, numerical integration must be used to find the eccentric anomaly. The processes for performing the integration of Kepler's equation are the subject of many other research papers due to the importance it plays in orbit propagation. It is not included in this paper for conciseness, but a python implementation of one of the methods can be found in the appendix section (TO DO INSERT REFERENCE TO APPENDIX SECTION HERE)(Maybe talk about the new methods in this area that do not require using integration).
 
 Kepler's equation has another form which enables us to convert the resulting eccentric anomaly to the true anomaly. This form is given as
 \begin{equation}
-	\nu = 2 \arctan\left(\sqrt{\frac{1+e}{1-e}}\tan\frac{E}{2}\right).
+	\nu = 2 \arctan\left(\sqrt{\cfrac{1+e}{1-e}}\tan\cfrac{E}{2}\right).
 \end{equation}
 
-Since we now have expressions for how the three anomalies will change over time for Kepler orbits, we can accurately propagate the debris until the ring formation phase is completed. However, we now need to have a method to detect once the ring formation phase is completed to switch to performing the propagation for future phases. A visualization of end result of the ring formation phase is provided in Figure~\ref{ring}.
+Since we now have expressions for how the three anomalies will change over time for Kepler orbits, we can accurately propagate the debris until the ring formation phase is completed. However, we now need a method to detect the completion of the ring formation phase, cuing the switch to performing the propagation for future phases. A visualization of end result of the ring formation phase is provided in Figure~\ref{ring}.
 \begin{figure}[b!]
 	\centering
 	\includegraphics[scale=0.45]{ring_phase}
@@ -858,7 +862,7 @@ Since we now have expressions for how the three anomalies will change over time 
 
 Detecting the end of the ring formation phase is crucial in propagating the debris cloud. When transitioning from the ring phase to the toroid and band phases, additional forces such as drag must be considered. Additionally, these new phases take a much longer amount of time to form. Both of these factors result in needing to switch to a new propagation method. As such, detecting when the ring has formed allows us to switch to this new propagation method.
 
-To asses whether the system has formed a roughly uniform ring, we monitor the amount of debris passing through a certain region of space as a function of time. A visualization of how this process works is provided in Figure~\ref{flux_diagrams}.
+To assess whether the system has formed a roughly uniform ring, we monitor the amount of debris passing through a certain region of space as a function of time. A visualization of how this process works is provided in Figure~\ref{flux_diagrams}.
 
 \begin{figure}[h]
 	\begin{adjustbox}{max width=1\linewidth,center}
@@ -872,7 +876,7 @@ To asses whether the system has formed a roughly uniform ring, we monitor the am
 
 More specifically, to measure the fragments' spread we will define a particle-based flux. This is accomplished by creating an $xz$-plane in the equatorial coordinate system and detecting when particles have switched from one side of the plane to the other. Plotting the results will show peaks when the fragments pass through, which will converge to some value as the fragments become uniformly spread out.
 
-Plotting the flux over time shows these expected peaks and what seems to be convergence to some value. However, the data is quite noisy and we need a concrete method to determine when the fragments will be distributed uniformly. As such, we need to develop a method to test for when the data has converged. A property that is true of all uniform distributions is that the variance approximately equals the mean. As such, we can define a convergence ratio using the variance and mean of the flux. When the convergence ratio is within some defined tolerance we can test for when the flux has become uniform. Once the convergence ratio is within the defied tolerance  we can then conclude that the ring formation phase has completed. It should be noted that the ring never reaches true uniformity which results in oscillating flux. An example of how the flux and convergence ratio evolves with time is shown in Figure~\ref{flux_plots}.
+Plotting the flux over time shows these expected peaks and what seems to be convergence to some value. However, the data is quite noisy and we need a concrete method to determine when the fragments will be distributed uniformly. As such, we need to develop a method to test for when the data has converged. A property that is true of all uniform distributions is that the variance approximately equals the mean. As such, we can define a convergence ratio using the variance and mean of the flux. When the convergence ratio is within some defined tolerance we can test for when the flux has become uniform. Once the convergence ratio is within the defined tolerance the ring formation phase has completed. It should be noted that the ring never reaches true uniformity which results in oscillating flux. An example of how the flux and convergence ratio evolves with time is shown in Figure~\ref{flux_plots}. Additional information about the derivation used to determine when the ring formation phase has ended can be found in section~\ref{app:flux}of the appendix.
 
 \begin{figure}[t]
 	\begin{adjustbox}{max width=1\linewidth,center}
@@ -886,13 +890,25 @@ Plotting the flux over time shows these expected peaks and what seems to be conv
 
 
 \subsection{Toroid and Band Phase}
-For the evolution of the cloud to continue, we must now consider orbital perturbations that will cause the orbits to change over time. Beginning to consider perturbations such as drag and J2 will enable the ring shape of the cloud to evolve towards the Toroid band. 
+For the evolution of the cloud to continue, we must now consider orbital perturbations that will cause the orbits to change over time.  Perturbations are forces that act on each debris fragment and result in the motion changing over time. The two most dominant of these forces are drag and the $J_2$ perturbation. The result of drag is the debris cloud expanding inward, as the effects of the atmosphere slow down debris fragments. Similarly, the $J_2$ perturbation results from the gravitational field produced by the earth and causes the debris to spread out. The results of applying these perturbations are shown in Figure~\ref{band}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.75]{band_phase}
+	\caption{A visualization created by ODAP of the completed band formation.}
+	\label{band}
+\end{figure}
 
 \subsubsection{Aerodynamic Drag}
 
-A significant perturbation that causes changes in the fragments' orbits is \boldindex{atmospheric drag}. Atmospheric drag acts on a fragment as a result of molecules in the atmosphere colliding with its surface and is a natural consequence of conservation of momentum. 
+A significant perturbation that causes changes in the fragments' orbits is \boldindex{atmospheric drag}. Atmospheric drag acts on a fragment due to molecules in the atmosphere colliding with its surface and is a natural consequence of the conservation of momentum. This causes a fragment to slow down, which in return lowers the orbit. This cycle continues until the object is no longer in orbit and re-enters the atmosphere. Figure~\ref{fig:drag_diagram} illustrates this effect.
 
-\subsubsection{Atmospheric Models}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.5\textwidth]{drag}
+	\caption{A diagram illustrating how the force of drag slows down a satellite, causing an eventual deorbit.}
+	\label{fig:drag_diagram}
+\end{figure}
 
 To model the effects of drag, a suitable atmospheric model must be selected. An atmospheric model tells us information about factors such as air pressure, air density,and wind speed at varying locations in the atmosphere. However, it would be cumbersome and computationally inefficient to utilize a model that contains all of this information.  As such, atmospheric models tend to focus on a select few variables rather than creating a universal ``best'' model that considers all relevant factors \citep{vallado_d._2013}.
 
@@ -900,11 +916,11 @@ Choosing a model that best fits a given use case comes down to the desired crite
 
 In the exponential atmospheric model the air density $\rho$ varies according to
 \begin{equation}
-	\rho = \rho_0\:\exp\left(-\frac{h_{ellp} - h_0}{H}\right)
+	\rho = \rho_0\:\exp\left(-\cfrac{h_{ellp} - h_0}{H}\right)
 \end{equation}
 where $\rho_0$ is a reference density that is used with $h_0$,  a reference altitude,  $h_{ellp}$ is the actual altitude above the ellipsoid, and $H$ is a scale height.
 
-The reference density and reference altitude are tabulated values that come from sources such as the U.S. Standard Atmosphere and CIRA. The scale height is a value used to ensure continuity throughout $\rho$. The combination of the U.S. Standard Model and CIRA will yield moderately accurate results for general purposes and as such will utilized in for computing the force of drag \citep{vallado_d._2013}. \footnote{The atmospheric model implementation, including the tabulated values that are used, are included in the appendix of this paper}
+The reference density and reference altitude are tabulated values that come from sources such as the U.S. Standard Atmosphere and CIRA. The scale height is a value used to ensure continuity throughout $\rho$. The combination of the U.S. Standard Model and CIRA will yield moderately accurate results for general purposes and as such will utilized in for computing the force of drag \citep{vallado_d._2013}. The tabulated values are included in the appendix in Section (X)
 
 \begin{figure}[h]
 	\centering     %%% not \center
@@ -919,7 +935,7 @@ The air density, $\rho$, as a function of altitude is shown above. Note that the
 
 The aerodynamic drag on an object is typically expressed in the following form:
 \begin{equation}
-	F_D = \frac{1}{2m} \rho v^2 \: C_D A
+	F_D = \cfrac{1}{2m} \rho v^2 \: C_D A
 \end{equation}
 where $\rho$ is the air density, $v$ is the speed of the object relative to the fluid, $C_D$ is an experimentally determined dimensionless number, $A$ is the cross sectional area, and $m$ is the mass of the satellite.
 
@@ -944,7 +960,7 @@ The expressions for the effects of drag on orbital elements are derived by King-
 		\end{cases}
 	\end{align}
 
-$I_k(z)$ represents the modified Bessel function with order $n$, where $z = \frac{ae}{H}$ and is given by
+$I_k(z)$ represents the modified Bessel function with order $n$, where $z = \cfrac{ae}{H}$ and is given by
 $$
 I_k(z) = \dfrac{1}{\pi} \int_{0}^{\pi} e^{z\cos(\theta)}\cos(k\theta)d\theta \:\:\:\:\:\: k \in \mathbb{Z}.
 $$
@@ -963,17 +979,17 @@ The first modification to the King-Hele implementation is to introduce two funct
 For circular orbits, $e = 0$, the change in $a$ and $e$ can be solved using the following expression:
 \begin{equation*}
 	\begin{aligned}
-		\frac{da}{dt} &= -k_a\\
-		\frac{de}{dt} &= 0
+		\cfrac{da}{dt} &= -k_a\\
+		\cfrac{de}{dt} &= 0
 	\end{aligned}
 \end{equation*}
 
 For low eccentric orbits, $e < e_b(a, H)$, a series expansion in $e$ is performed and integrated using the first kind modified Bessel function as
 \begin{equation}
-		\frac{da}{dt}  = -k_a \exp(-z) (\boldsymbol{e}^T \boldsymbol{K_a^l} \boldsymbol{I} + O(e^6))
+		\cfrac{da}{dt}  = -k_a \exp(-z) (\boldsymbol{e}^T \boldsymbol{K_a^l} \boldsymbol{I} + O(e^6))
 \end{equation}
 \begin{equation}
-	\frac{de}{dt}  = -k_e \exp(-z) (\boldsymbol{e}^T \boldsymbol{K_e^l} \boldsymbol{I} + O(e^6)),
+	\cfrac{de}{dt}  = -k_e \exp(-z) (\boldsymbol{e}^T \boldsymbol{K_e^l} \boldsymbol{I} + O(e^6)),
 \end{equation}
 
 where \begin{align}
@@ -982,18 +998,18 @@ where \begin{align}
 	\boldsymbol{K_a^l} &= \begin{bmatrix}
 		1 & 0 & 0 & 0 &0&0 &0\\
 		0 & 2 & 0 & 0 &0&0 &0\\
-		\frac{3}{4} & 0 & \frac{3}{4} & 0 &0&0 &0\\
-		0 & \frac{3}{4} & 0 & \frac{1}{4} &0&0 &0\\
-	    \frac{21}{64} & 0 & \frac{28}{64} & 0 &\frac{7}{64}&0 &0\\
-	    0 & \frac{30}{64} & 0 & \frac{15}{64} &0&\frac{3}{64} &0\\
+		\cfrac{3}{4} & 0 & \cfrac{3}{4} & 0 &0&0 &0\\
+		0 & \cfrac{3}{4} & 0 & \cfrac{1}{4} &0&0 &0\\
+	    \cfrac{21}{64} & 0 & \cfrac{28}{64} & 0 &\cfrac{7}{64}&0 &0\\
+	    0 & \cfrac{30}{64} & 0 & \cfrac{15}{64} &0&\cfrac{3}{64} &0\\
 	\end{bmatrix}\\
 	\boldsymbol{K_e^l} &= \begin{bmatrix}
 		0 & 1 & 0 & 0 &0&0 &0\\
-		\frac{1}{2} & 0 & \frac{1}{2} & 0 &0&0 &0\\
-		0 & -\frac{5}{8}  & 0 & \frac{1}{8}  &0&0 &0\\
-		-\frac{5}{16}  & 0 & -\frac{4}{16}  &0 &\frac{1}{16} &0 &0\\
-		0 & -\frac{18}{128} & 0& -\frac{1}{128}  &0&\frac{3}{128}  &0\\
-		-\frac{18}{256}  & 0 & -\frac{19}{256}  & 0 &\frac{2}{256} &0 &\frac{3}{256}.\\
+		\cfrac{1}{2} & 0 & \cfrac{1}{2} & 0 &0&0 &0\\
+		0 & -\cfrac{5}{8}  & 0 & \cfrac{1}{8}  &0&0 &0\\
+		-\cfrac{5}{16}  & 0 & -\cfrac{4}{16}  &0 &\cfrac{1}{16} &0 &0\\
+		0 & -\cfrac{18}{128} & 0& -\cfrac{1}{128}  &0&\cfrac{3}{128}  &0\\
+		-\cfrac{18}{256}  & 0 & -\cfrac{19}{256}  & 0 &\cfrac{2}{256} &0 &\cfrac{3}{256}.\\
 	\end{bmatrix}
 \end{align}
 The vast majority of the debris falls in the low eccentricity range, so only the circular and low eccentricity expressions are implemented. The high eccentricity range has a similar formulation provided by \cite{frey_extension_2019}.
@@ -1010,7 +1026,7 @@ As a result, the planetary body creates a non-uniform gravitational field that i
 	\caption{From Wikipedia Nodal Precession}
 \end{figure}
 
-Intuitively, it would appear that the torque would reduce the inclination of the orbit.However, due to the bulge, the gravitational force is not directed towards the center of the body, but rather is offset toward the equatorial plane. As such, it causes torque-induced gyroscopic precession which causes the ascending and descending nodes to drift with time. This phenomenon is called \boldindex{nodal precession}.
+Intuitively, it would appear that the torque would reduce the inclination of the orbit. However, due to the bulge, the gravitational force is not directed towards the center of the body, but rather is offset toward the equatorial plane. As such, it causes torque-induced gyroscopic precession which causes the ascending and descending nodes to drift with time. This phenomenon is called \boldindex{nodal precession}.
 
 The effects of nodal precession on the ascending and descending nodes is expressed by
 \begin{align*}
@@ -1040,7 +1056,7 @@ When a fragmentation event occurs, it is relevant to study the debris fragments'
 
 We expect that fragmentation events that occur in higher altitudes will generate debris that last longer. This is a direct consequence of drag's negligible effect at high altitudes due to the decreased air density. Additionally, since drag depends on the surface area of a debris fragment, we expect to see some debris fragments that deorbit faster than others at similar altitudes.
 
-To analyze the orbital decay time using ODAP, we can use the simulated data from the band formation phase, where  perturbations. The output of this phase is the change in the Keplerian elements over time. As such, we can use the expression for the \boldindex{perigee}, which is the altitude at the lowest point of an orbit. The perigee is defined using Keplerian elements as
+To analyze the orbital decay time using ODAP, we can use the simulated data from the band formation phase. The output of this phase is the change in the Keplerian elements over time. As such, we can use the expression for the \boldindex{perigee}, which is the altitude at the lowest point of an orbit. The perigee is defined using Keplerian elements as
 \begin{equation}
 	z = a (1 - e).
 \end{equation}
@@ -1049,8 +1065,7 @@ It should be noted that the perigee is being measured from the center of the Ear
 Applying this process for both the Starlink satellite and OXP 1 results in the data used in Figure~\ref{altitudes}. The fragmentation event used in this simulation was identical for both satellites. The only changes were the starting orbits of the satellites. While only a random sample of data from both simulations is displayed in the Figure, the data revealed that 100\% of the Starlink fragments were deorbited within three years while only 1.5\% of the OXP 1 fragments were deorbited during this same interval.
 
 This simulation concludes that fragmentation events occurring with mega-constellations in the lower region of LEO are of less concern than those occurring in higher orbits. While both create immense amounts of debris, the lower altitude Starlink satellites pose less of a threat to the long term health of LEO.
-
-\begin{figure}[b!]
+\begin{figure}[h!]
 	\begin{adjustbox}{max width=1\linewidth,center}
 		\centering     %%% not \center
 		\subfigure[]{\label{fig:a}\includegraphics[width=0.5\textwidth]{Starlink_altitudes}}
@@ -1068,10 +1083,9 @@ This component of the analysis was conducted by performing a kernel density esti
 
 Figure~\ref{fig:starlink_dist} shows the results of performing this type of analysis on the fragmentation event used in the above subsection. As you can see, initially, most of the debris had a right angle of ascending node that was tightly clustered around the satellite's initial value. As the debris cloud evolves, this distribution becomes increasingly uniform. Notably, since the Starlink debris gets deorbited relatively quickly, it never has an opportunity to become entirely uniform. The simulated data for OXP exhibit this same phenomenon, thus allowing the analysis performed on the Starlink satellite suffice.
 
-\newpage
 In Section 5.2, we learned that the initial altitude of a breakup event dramatically impacts the time for the debris to deorbit. However, this Section revealed that it does not play a significant role in how spread out the debris becomes over time. The purpose of this analysis is to demonstrate how ODAP can be applied to gain new intuitions and understanding about the evolution of orbital debris.
 
-\begin{figure}[t!]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.4, trim={0 0 0 2cm},clip]{starlink_dist}
 	\caption{The kernel density estimation performed on the band formation phase of the Starlink satellite. The sampled values are from the beginning of the phase, the midpoint, and the end.}
@@ -1082,7 +1096,7 @@ In Section 5.2, we learned that the initial altitude of a breakup event dramatic
 
 Orbital debris will be a persistent problem as humankind continues to explore and utilize space to advance science. As such, the ability to model and study the effects associated with it is crucial. Unfortunately, much of the existing literature is difficult to find and gives an incomplete picture of the entire process needed to model orbital debris. Additionally, most of the available code to perform the analysis is written in older programming languages that are no longer widely used. Thus, ODAP was developed to be an open-source, easily accessible tool that utilizes a modern programming language to aid in research conducted in this field. This thesis also serves as a complete introduction to the necessary information needed to understand the process of modeling orbital debris.
 
-There are many avenues for expanding on the research conducted in this thesis. One that I find most interesting is modeling the formed debris band analytically. This provides many benefits for conducting analysis but requires a significant amount of additional background information to understand. As such, it was outside the scope of this research. Additionally, refining ODAP to support different atmospheric models is a planned future addition. This would allow for a more in-depth analysis of the time it takes for debris to deorbit.
+There are many avenues for expanding on the research conducted in this thesis. One of the most interesting is modeling the formed debris band analytically. This provides many benefits for conducting analysis but requires a significant amount of additional background information to understand. As such, it was outside the scope of this research. Additionally, ODAP will be continually refined to add new functionality, such as adding support for different atmospheric models. This would allow for a more in-depth analysis of the time it takes for debris to deorbit.
 
 Many of these additional complexities are planned to be implemented into ODAP in the future. As such, the code base for ODAP is expected to evolve significantly over time. The appendix of this paper includes some of the most important functionality for reference, but the most up-to-date version will be found on Github.
 
@@ -1110,23 +1124,23 @@ Many of these additional complexities are planned to be implemented into ODAP in
 Write a description of what each section of the appendix covers
 	
 \section{Flux}
-
+\label{app:flux}
 Let's pick a time interval T. Let's call N the number of debris pieces that cross the cross section (green plane in Figure xxx). Let's divide the time interval into M subinterval of length T/M.
 
 What we measure in the simulation is the number debris crossing the cross section during each subinterval. What we're interested in predicting here is the statistics of those numbers when the positions of the debris along their orbits are distributed uniformly and independently from each other.
 
 Each debris has a probability 1/M of crossing during a specific subinterval. The probability of exactly n debris crossing during a specific subinterval obeys a binomial distribution:
 
-$$P_n = C_N^n \left(\frac{1}{M}\right)^n\left(1-\frac{1}{M}\right)^{N-n} . $$
+$$P_n = C_N^n \left(\cfrac{1}{M}\right)^n\left(1-\cfrac{1}{M}\right)^{N-n} . $$
 
 Expectedly, the average number of debris crossing during a single subinterval is the number of debris crossing during the full interval (T) divided by the number of subintervals:
 
-$$\left\langle P_n \right\rangle = \sum_0^N n P_n = \frac{N}{M} .$$
+$$\left\langle P_n \right\rangle = \sum_0^N n P_n = \cfrac{N}{M} .$$
 
 The variance is:
 
-%$$\left\langle \left(P_n-\frac{N}{M}\right)^2 \right\rangle = ... = \frac{N}{M}\left(1-\frac{N}{M}\right) . $$
-$$\left\langle \left(P_n-\langle P_n\rangle \right)^2 \right\rangle = ... = \frac{N}{M}\left(1-\frac{N}{M}\right) . $$
+%$$\left\langle \left(P_n-\cfrac{N}{M}\right)^2 \right\rangle = ... = \cfrac{N}{M}\left(1-\cfrac{N}{M}\right) . $$
+$$\left\langle \left(P_n-\langle P_n\rangle \right)^2 \right\rangle = ... = \cfrac{N}{M}\left(1-\cfrac{N}{M}\right) . $$
 
 Therefore, if the debris ring is fully randomized and the average number of debris crossing per time step is $\phi$, we should expect the actual measurement to fluctate through time with a variance $\phi(1-\phi)$.
 
@@ -1171,32 +1185,33 @@ This in turn provides a criterion to assess whether the ring is fully randomized
 		&                           &                    &                                           &                  
 	\end{tabular}
 	}
-\caption{Caption}
+\caption{The tabulated values used in the exponential atmospheric model \citep{vallado_d._2013}.}
 \label{atm}
 \end{table}
 
-%\section{Code}
-%
-%\subsection{Breakup Model}
-%\label{subsec:breakup}
-%\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
-%{code/OrbitalDebris/generate_debris.py}
-%
-%\subsection{Coordinate Transforms}
-%\label{subsec:transform}
-%\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
-%{code/OrbitalDebris/CoordTransforms.py}
-%
-%\subsection{Orbit Propagation}
-%\label{subsec:propagation}
-%\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
-%{code/OrbitalDebris/Perturbations.py}
-%
-%
-%\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]
-%{code/OrbitalDebris/Perturbations.py}
-%
-%	
+\section{Code}
+
+\subsection{Breakup Model}
+\label{subsec:breakup}
+
+\lstinputlisting[label = {alg:code/OrbitalDebris/generate_debris}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 378]
+{code/OrbitalDebris/generate_debris.py}
+
+\subsection{Coordinate Transforms}
+\label{subsec:transform}
+\lstinputlisting[label = {alg:code/OrbitalDebris/CoordTransforms}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 181]
+{code/OrbitalDebris/CoordTransforms.py}
+
+\subsection{Orbit Propagation}
+\label{subsec:propagation}
+\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Differential Equations Implementation}, firstline = 1, lastline = 255]
+{code/OrbitalDebris/Perturbations.py}
+
+
+\lstinputlisting[label = {alg:code/OrbitalDebris/Perturbations}, caption = {Perturbation Propagator}, firstline = 129, lastline = 156]
+{code/OrbitalDebris/Perturbations.py}
+
+	
 	
 \end{appendices}
 
